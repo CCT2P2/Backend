@@ -13,6 +13,7 @@ API Auth Method: Token (64-128bit)
 
 ## Database Schema
   ### Community
+  ```
   Column name    Type       Constraints                           Description
   -------------- ---------- ------------------------------------- --------------------------------------
   ID             UUID       PRIMARY KEY                           Unique Identifier
@@ -22,8 +23,10 @@ API Auth Method: Token (64-128bit)
   MEMBER_COUNT   INT        DEFAULT 0, NOT NULL                   Number of members
   TAGS           UUID []    NOT NULL                              Content tags
   POST_IDs       UUID []                                          Array of post ID's (FK. to Posts.ID)
+  ```
 
 ### User
+  ```
   Column Name     Type       Constraints               Description
   --------------- ---------- ------------------------- ---------------------------------------------
   ID              UUID       PRIMARY KEY               Unique Identifier
@@ -35,8 +38,10 @@ API Auth Method: Token (64-128bit)
   COMMUNITY_IDs   UUID []                              Array of communities (FK. to Communities.ID)
   ADMIN           BOOLEAN    NOT NULL, DEFAULT FALSE   ADMIN FLAG
   TAGS            UUID []                              Array of tags for content recommendation
+  ```
 
 ### Posts
+  ```
   Column Name    Type        Constraints                        Description
   -------------- ----------- ---------------------------------- ---------------------------------------------------------
   POST_ID        UUID        PRIMARY KEY                        Unique Identifier
@@ -51,6 +56,7 @@ API Auth Method: Token (64-128bit)
   COMMENT_FLAG   BOOLEAN     NOT NULL                           Indicates comment instead of post
   COMMENT_CNT    INT         NOT NULL, DEFAULT 0                Comment count
   Comments       UUID []                                        Array of post id's for comments (FK. Post.ID)
+  ```
 
 ## API Endpoints
 ### Authentication
