@@ -54,76 +54,76 @@ API Auth Method: Token (64-128bit)
 
 ## API Endpoints
   ### Authentication
-    #### User Login
-      Endpoint: `POST /api/auth/login`
-      Desc: Auth user and return access token
-      Request body:
-        ```json
-          {
-            "username": "string",
-            "password": "string"
-          }
-        ```
-      Response:
-        if success:
-          ```json
-            {
-              "token": "string",
-              "user_id": "UUID"
-            }
-          ```
-        if not:
-          401 (unauthorised access)
-
-    #### User Registration
-      Endpoint: `POST /api/auth/register`
-      Desc. Register a new user, and return access token
-      Request body:
-        ```json
-          {
-            "email": "string",
-            "username": "string",
-            "password": "string"
-          }
-        ```
-      Response:
+  #### User Login
+    Endpoint: `POST /api/auth/login`
+    Desc: Auth user and return access token
+    Request body:
+      ```json
+        {
+          "username": "string",
+          "password": "string"
+        }
+      ```
+    Response:
+      if success:
         ```json
           {
             "token": "string",
             "user_id": "UUID"
           }
         ```
-  ### User Management
-    #### Get User Profile
-      Endpoint: `GET /api/user/{user_id}`
-      Desc: Retrieve user data
-      Response:
+      if not:
+        401 (unauthorised access)
+
+  #### User Registration
+    Endpoint: `POST /api/auth/register`
+    Desc. Register a new user, and return access token
+    Request body:
       ```json
         {
-          "id": "UUID",
           "email": "string",
           "username": "string",
-          "img_path": "string",
-          "post_ids": ["UUID"],
-          "community_ids": ["UUID"],
-          "tags": ["UUID"],
-          "admin": "boolean"
+          "password": "string"
         }
       ```
-    #### Delete User Account
-      Endpoint: `DELETE /api/user/{user_id}`
-      desc: Deletes the account
-      Response: 204 (No content)
-
-    #### Update User Profile
-      Endpoint: `PUT /api/user/{user_id}`
-      desc: Updates user profile
-      Request body:
+    Response:
       ```json
         {
-          "img_path": "string",
-          "password": "string",
-          "communities": ["UUID"]
+          "token": "string",
+          "user_id": "UUID"
         }
       ```
-      Response: 200 (OK)
+### User Management
+  #### Get User Profile
+    Endpoint: `GET /api/user/{user_id}`
+    Desc: Retrieve user data
+    Response:
+    ```json
+      {
+        "id": "UUID",
+        "email": "string",
+        "username": "string",
+        "img_path": "string",
+        "post_ids": ["UUID"],
+        "community_ids": ["UUID"],
+        "tags": ["UUID"],
+        "admin": "boolean"
+      }
+    ```
+  #### Delete User Account
+    Endpoint: `DELETE /api/user/{user_id}`
+    desc: Deletes the account
+    Response: 204 (No content)
+
+  #### Update User Profile
+    Endpoint: `PUT /api/user/{user_id}`
+    desc: Updates user profile
+    Request body:
+    ```json
+      {
+        "img_path": "string",
+        "password": "string",
+        "communities": ["UUID"]
+      }
+    ```
+    Response: 200 (OK)
