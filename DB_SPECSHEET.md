@@ -61,8 +61,8 @@ API Auth Method: Token (64-128bit)
 ## API Endpoints
 ### Authentication
 #### User Login
-Endpoint: `POST /api/auth/login`
-Desc: Auth user and return access token
+Endpoint: `POST /api/auth/login`  
+Desc: Auth user and return access token  
 Request body:
   ```json
     {
@@ -82,8 +82,8 @@ if not:
   `401 (unauthorised access)`
 
 #### User Registration
-Endpoint: `POST /api/auth/register`
-Desc. Register a new user, and return access token
+Endpoint: `POST /api/auth/register`  
+Desc. Register a new user, and return access token  
 Request body:
   ```json
     {
@@ -100,9 +100,9 @@ Response:
     }
   ```
 ### User Management
-#### Get User Profile
-Endpoint: `GET /api/user/{user_id}`
-Desc: Retrieve user data
+#### Get User Profile  
+Endpoint: `GET /api/user/{user_id}`  
+Desc: Retrieve user data  
 Response:
 ```json
   {
@@ -117,13 +117,13 @@ Response:
   }
 ```
 #### Delete User Account
-Endpoint: `DELETE /api/user/{user_id}`
-desc: Deletes the account
+Endpoint: `DELETE /api/user/{user_id}`  
+desc: Deletes the account  
 Response: `204 (No content)`
 
 #### Update User Profile
-Endpoint: `PUT /api/user/{user_id}`
-desc: Updates user profile
+Endpoint: `PUT /api/user/{user_id}`  
+desc: Updates user profile  
 Request body:
 ```json
   {
