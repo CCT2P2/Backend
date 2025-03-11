@@ -1,8 +1,8 @@
 # DB API specsheet
-Time: 11-03-2024 @ 11:49  
+Time: 11-03-2024 @ 16:42  
 Author: Sebastian Lindau-Skands @ GNUF | Backend  
 Reciever: GNUF | DB Team  
-Version: 0.34, draft  
+Version: 0.82, draft  
 
 ## Overview
 DB: sqlite  
