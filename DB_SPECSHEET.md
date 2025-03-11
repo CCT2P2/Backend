@@ -61,30 +61,30 @@
 ## API Endpoints
 ### Authentication
 #### User Login
-Endpoint: `POST /api/auth/login`  
-Desc: Auth user and return access token  
-Request body:
+**Endpoint:** `POST /api/auth/login`  
+**Desc:** Auth user and return access token  
+**Request body:**
   ```json
     {
       "username": "string",
       "password": "string"
     }
   ```
-Response:
-if success:
+**Response:**
+_if success:_
   ```json
     {
       "token": "string",
       "user_id": "UUID"
     }
   ```
-if not:
+_if not:_
   `401 (unauthorised access)`
 
 #### User Registration
-Endpoint: `POST /api/auth/register`  
-Desc. Register a new user, and return access token  
-Request body:
+**Endpoint:** `POST /api/auth/register`  
+**Desc:** Register a new user, and return access token  
+**Request body:**
   ```json
     {
       "email": "string",
@@ -92,7 +92,7 @@ Request body:
       "password": "string"
     }
   ```
-Response:
+**Response:**
   ```json
     {
       "token": "string",
@@ -101,9 +101,9 @@ Response:
   ```
 ### User Management
 #### Get User Profile  
-Endpoint: `GET /api/user/{user_id}`  
-Desc: Retrieve user data  
-Response:
+**Endpoint:** `GET /api/user/{user_id}`  
+**Desc:** Retrieve user data  
+**Response:**
 ```json
   {
     "id": "UUID",
@@ -117,14 +117,14 @@ Response:
   }
 ```
 #### Delete User Account
-Endpoint: `DELETE /api/user/{user_id}`  
-desc: Deletes the account  
-Response: `204 (No content)`
+**Endpoint:** `DELETE /api/user/{user_id}`  
+**desc:** Deletes the account  
+**Response:** `204 (No content)`
 
 #### Update User Profile
-Endpoint: `PUT /api/user/{user_id}`  
-desc: Updates user profile  
-Request body:
+**Endpoint:** `PUT /api/user/{user_id}`  
+**desc:** Updates user profile  
+**Request body:**
 ```json
   {
     "img_path": "string",
@@ -132,4 +132,4 @@ Request body:
     "communities": ["UUID"]
   }
 ```
-Response: `200 (OK)`
+**Response:** `200 (OK)`
