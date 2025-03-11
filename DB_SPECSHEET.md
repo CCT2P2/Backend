@@ -1,15 +1,15 @@
 # DB API specsheet
-Time: 11-03-2024 @ 16:42  
-Author: Sebastian Lindau-Skands @ GNUF | Backend  
-Reciever: GNUF | DB Team  
-Version: 0.82, draft  
+**Time: **11-03-2024 @ 16:42  
+**Author:** Sebastian Lindau-Skands @ GNUF | Backend  
+**Reciever:** GNUF | DB Team  
+**Version:** 0.82, draft  
 
 ## Overview
-DB: sqlite  
-API: C# (IMC for frequent values)  
-Env: alpine/sqlite:3.48.0  
-Dedicated com-port for API: 9012  
-API Auth Method: Token (64-128bit)  
+**DB:** sqlite  
+**API:** C# (IMC for frequent values)  
+**Env:** alpine/sqlite:3.48.0  
+**Dedicated com-port for API:** 9012  
+**API Auth Method:** Token (64-128bit)  
 
 ## Database Schema
   ### Community
