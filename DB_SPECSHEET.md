@@ -1,5 +1,5 @@
 # DB API specsheet  
-**Time:** 12-03-2025 @ 11:15
+**Time:** 13-03-2025 @ 12:18  
 **Author:** Sebastian Lindau-Skands @ GNUF | Backend  
 **Reciever:** GNUF | DB Team  
 **Version:** 1.2
@@ -9,59 +9,57 @@
 **API:** C# (IMC for frequent values)  
 **Env:** alpine/sqlite:3.48.0  
 **Dedicated com-port for API:** 9012  
-**API Auth Method:** Token (64-128bit)  
+**API Auth Method:** Token 64-bit 
 
 # Database Schema
   ## Community
   ```
   Column name    Type       Constraints                           Description
   -------------- ---------- ------------------------------------- --------------------------------------
-  ID             UUID       PRIMARY KEY                           Unique Identifier
+  ID             INT        PRIMARY KEY                           Unique Identifier
   NAME           TEXT       UNIQUE, NOT NULL                      Community Name
   Description    TEXT       CHECK (LENGTH(description) < 2000)    Community description
   IMG_PATH       TEXT                                             URL to community image
   MEMBER_COUNT   INT        DEFAULT 0, NOT NULL                   Number of members
-  TAGS           UUID []    NOT NULL                              Content tags
-  POST_IDs       UUID []                                          Array of post ID's (FK. to Posts.ID)
+  TAGS           INT []     NOT NULL                              Content tags
+  POST_IDs       INT []                                           Array of post ID's (FK. to Posts.ID)
   ```
 
 ## User
   ```
   Column Name     Type       Constraints               Description
   --------------- ---------- ------------------------- ---------------------------------------------
-  ID              UUID       PRIMARY KEY               Unique Identifier
+  ID              INT        PRIMARY KEY               Unique Identifier
   EMAIL           TEXT       UNIQUE, NOT NULL          User's Email
   USERNAME        TEXT       UNIQUE, NOT NULL          Unique Username
   PASSWORD        TEXT       NOT NULL                  Hashed Password (SHA256)
   IMG_PATH        TEXT                                 URL TO PP
-  POST_IDs        UUID []                              Array of post IDs (FK. to Posts.ID)
-  COMMUNITY_IDs   UUID []                              Array of communities (FK. to Communities.ID)
+  POST_IDs        INT []                               Array of post IDs (FK. to Posts.ID)
+  COMMUNITY_IDs   INT []                               Array of communities (FK. to Communities.ID)
   ADMIN           BOOLEAN    NOT NULL, DEFAULT FALSE   ADMIN FLAG
-  TAGS            UUID []                              Array of tags for content recommendation
+  TAGS            INT []                               Array of tags for content recommendation
   ```
 
 ## Posts
   ```
   Column Name    Type        Constraints                        Description
   -------------- ----------- ---------------------------------- ---------------------------------------------------------
-  POST_ID        UUID        PRIMARY KEY                        Unique Identifier
+  POST_ID        INT         PRIMARY KEY                        Unique Identifier
   TITLE          TEXT        NOT NULL, CHECK (LENGTH < 1000)    Post title (if comment, title should be "cmt_{post_id}")
   MAIN_TEXT      TEXT        CHECK (LENGTH < 100k)              Post body
-  AUTH_ID        UUID        NOT NULL                           Author ID (FK. User.ID)
-  COM_ID         UUID        NOT NULL                           Community ID (FK. Community.ID)
+  AUTH_ID        INT         NOT NULL                           Author ID (FK. User.ID)
+  COM_ID         INT         NOT NULL                           Community ID (FK. Community.ID)
   TIMESTAMP      TIMESTAMP   NOT NULL                           Time of post
   LIKES          INT         NOT NULL, DEFAULT 0                Likes on post
   DISLIKES       INT         NOT NULL, DEFAULT 0                Dislikes on post
-  POST_ID_REF    UUID                                           Refference to original post (for reposts) (FK. Post.ID)
+  POST_ID_REF    INT                                            Refference to original post (for reposts) (FK. Post.ID)
   COMMENT_FLAG   BOOLEAN     NOT NULL                           Indicates comment instead of post
   COMMENT_CNT    INT         NOT NULL, DEFAULT 0                Comment count
-  Comments       UUID []                                        Array of post id's for comments (FK. Post.ID)
+  Comments       INT []                                         Array of post id's for comments (FK. Post.ID)
   ```
 
 # API Endpoints
-**Response:** `204 (no content)` if entry not found  
 ## Authentication
-_token generation will be handled by backend, and matched cookie with user UUID no client side_
 ### User Login
 **Endpoint:** `POST /api/auth/login`  
 **Desc:** Auth user and return access token  
@@ -73,14 +71,11 @@ _token generation will be handled by backend, and matched cookie with user UUID 
     }
   ```
 **Response:**
-_if success:_
   ```json
     {
-      "user_id": "UUID"
+      "user_id": "INT"
     }
   ```
-_if not:_
-  `401 (unauthorised access)`
 
 ### User Registration
 **Endpoint:** `POST /api/auth/register`  
@@ -96,7 +91,7 @@ _if not:_
 **Response:**
   ```json
     {
-      "user_id": "UUID"
+      "user_id": "INT"
     }
   ```
 ## User Management
@@ -106,13 +101,13 @@ _if not:_
 **Response:**
 ```json
   {
-    "id": "UUID",
+    "id": "INT",
     "email": "string",
     "username": "string",
     "img_path": "string",
-    "post_ids": ["UUID"],
-    "community_ids": ["UUID"],
-    "tags": ["UUID"],
+    "post_ids": ["INT"],
+    "community_ids": ["INT"],
+    "tags": ["INT"],
     "admin": "boolean"
   }
 ```
@@ -129,7 +124,7 @@ _if not:_
   {
     "img_path": "string",
     "password": "string",
-    "communities": ["UUID"]
+    "communities": ["INT"]
   }
 ```
 **Response:** `200 (OK)`
@@ -144,14 +139,14 @@ _if not:_
     "name": "string",
     "description": "string",
     "img_path": "string",
-    "tags": ["UUID"]
+    "tags": ["INT"]
   }
 ```
 
 **Response:**
 ```json
   {
-    "community_id": "UUID"
+    "community_id": "INT"
   }
 ```
 
@@ -161,13 +156,13 @@ _if not:_
 **Response:**  
 ```json
   {
-    "id": "UUID",
+    "id": "INT",
     "name": "string",
     "description": "string",
     "img_path": "string",
     "member_count": "int",
-    "tags": ["UUID"],
-    "post_ids": ["UUID"]
+    "tags": ["INT"],
+    "post_ids": ["INT"]
   }
 ```
 
@@ -210,16 +205,16 @@ _if not:_
   {
     "title": "string",
     "main_text": "string",
-    "auth_id": "UUID",
-    "com_id": "UUID",
-    "post_id_ref": "UUID (optional)",
+    "auth_id": "INT",
+    "com_id": "INT",
+    "post_id_ref": "INT (optional)",
     "comment_flag": "boolean"
   }
 ```
 **Response:**
 ```json
   {
-    "post_id": "UUID"
+    "post_id": "INT"
   }
 ```
 
@@ -229,18 +224,18 @@ _if not:_
 **Response:**  
 ```json
   {
-    "id": "UUID",
+    "id": "INT",
     "title": "string",
     "main_text": "string",
-    "auth_id": "UUID",
-    "com_id": "UUID",
+    "auth_id": "INT",
+    "com_id": "INT",
     "timestamp": "timestamp",
     "likes": "int",
     "dislikes": "int",
-    "post_id_ref": "UUID",
+    "post_id_ref": "INT",
     "comment_flag": "boolean",
     "comment_count": "int",
-    "comments": ["UUID"]
+    "comments": ["INT"]
   }
 ```
 
@@ -280,7 +275,7 @@ _if not:_
 **Request body:**
 ```json
   {
-    "Comments": "UUID[]"
+    "Comments": "INT[]"
   }
 ```
 **Response:** `200 (ok)`
@@ -290,13 +285,13 @@ Search flags and filters are handled backend
 ### Search Posts
 **Endpoint:** `GET /api/search/posts`  
 **Desc:** searches accross all posts  
-**Query parameter:** `?q={keyword}`  
+**Query parameter:** `?q={keywords}`  
 **Response:**
 ```json
   {
     "results": [
       {
-        "post_id": "UUID",
+        "post_id": "INT",
         "title": "string",
         "main_text": "string",
         "timestamp": "timestamp"
@@ -308,13 +303,13 @@ Search flags and filters are handled backend
 ### Search Communities
 **Endpoint:** `GET /api/search/communities`  
 **Desc:** searches accross all communities  
-**Query parameter:** `q?={keyword}`  
+**Query parameter:** `q?={keywords}`  
 **Response:**
 ```json
   {
     "results": [
       {
-        "community_id": "UUID",
+        "community_id": "INT",
         "name": "string",
         "description": "string",
         "IMG_PATH": "string"
@@ -326,13 +321,13 @@ Search flags and filters are handled backend
 ### Search user
 **Endpoint:** `GET /api/search/users`  
 **Desc:** Searches across all users  
-**Query parameter:** `q?={keyword}`  
+**Query parameter:** `q?={keywords}`  
 **Response:**
 ```json
   {
     "results": [
       {
-        "user_id": "UUID",
+        "user_id": "INT",
         "username": "string",
         "IMG_PATH": "string"
       }
