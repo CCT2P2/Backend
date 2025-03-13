@@ -45,8 +45,8 @@
   Column Name    Type        Constraints                        Description
   -------------- ----------- ---------------------------------- ---------------------------------------------------------
   POST_ID        INT         PRIMARY KEY                        Unique Identifier
-  TITLE          TEXT        NOT NULL, CHECK (LENGTH < 1000)    Post title (if comment, title should be "cmt_{post_id}")
-  MAIN_TEXT      TEXT        CHECK (LENGTH < 100k)              Post body
+  TITLE          TEXT        NOT NULL, CHECK (LENGTH < 100)    Post title (if comment, title should be "cmt_{post_id}")
+  MAIN_TEXT      TEXT        CHECK (LENGTH < 10k)              Post body
   AUTH_ID        INT         NOT NULL                           Author ID (FK. User.ID)
   COM_ID         INT         NOT NULL                           Community ID (FK. Community.ID)
   TIMESTAMP      INT         NOT NULL                           Time of post
