@@ -247,8 +247,7 @@ due to technicall dumb dumb, lists are now json
 ```json
   {
     "title": "string",
-    "main_text": "string",
-    "comments": ["INT"]
+    "main_text": "string"
   }
 ```
 
