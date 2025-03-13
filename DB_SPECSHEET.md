@@ -248,6 +248,7 @@ due to technicall dumb dumb, lists are now json
   {
     "title": "string",
     "main_text": "string",
+    "comments": ["INT"]
   }
 ```
 
