@@ -18,7 +18,7 @@
   -------------- --------- ----------------------------------------------- --------------------------------------
   ID             INT       PRIMARY KEY                                     Unique Identifier
   NAME           TEXT      UNIQUE. NOT NULL. CHECK (LENGTH(NAME) \< 100)   Community Name
-  Description    TEXT      CHECK (LENGTH(description) \< 2000)             Community description
+  Description    TEXT      CHECK (LENGTH(description) \< 500)              Community description
   IMG_PATH       TEXT                                                      URL to community image
   MEMBER_COUNT   INT       DEFAULT 0. NOT NULL                             Number of members
   TAGS           INT\[\]   NOT NULL                                        Content tags
@@ -45,8 +45,8 @@
   Column Name    Type        Constraints                        Description
   -------------- ----------- ---------------------------------- ---------------------------------------------------------
   POST_ID        INT         UNIQUE. NOT NULL                   Unique Identifier
-  TITLE          TEXT        NOT NULL. CHECK (LENGHT \< 1000)   Post title
-  MAIN_TEXT      TEXT        CHECK (LENGTH \< 100k)             Post body
+  TITLE          TEXT        NOT NULL. CHECK (LENGHT \< 100)    Post title
+  MAIN_TEXT      TEXT        CHECK (LENGTH \< 10k)              Post body
   AUTH_ID        INT         NOT NULL                           Author ID (FK. User.ID)
   COM_ID         INT         NOT NULL                           Community ID (FK. Community.ID)
   TIMESTAMP      TIMESTAMP   NOT NULL                           Time of post
