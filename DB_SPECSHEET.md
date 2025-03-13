@@ -341,7 +341,7 @@ Search flags and filters are handled backend
 - **200 (ok)** | generic response when no response body is required
 - **204 (no content)** | use when data entry is empty (so does exist, but only contains NULL)
 - **400 (bad request)** | use when request body is malformed
-- **401 (unauthorised)** | use when user is a) not found, or b) does not have privilege to perform action
+- **401 (unauthorised)** | use when user does not have privilege to perform action
 - **404 (not found)** | use when data entry not found
 - **500 (internal server error)** | use for all other exceptions
 
