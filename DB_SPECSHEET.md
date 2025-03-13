@@ -18,7 +18,7 @@
   -------------- ---------- ------------------------------------- --------------------------------------
   ID             INT        PRIMARY KEY                           Unique Identifier
   NAME           TEXT       UNIQUE, NOT NULL                      Community Name
-  Description    TEXT       CHECK (LENGTH(description) < 2000)    Community description
+  Description    TEXT       CHECK (LENGTH(description) < 500)    Community description
   IMG_PATH       TEXT                                             URL to community image
   MEMBER_COUNT   INT        DEFAULT 0, NOT NULL                   Number of members
   TAGS           INT []     NOT NULL                              Content tags
