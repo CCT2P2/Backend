@@ -59,6 +59,7 @@
   ```
 
 # API Endpoints
+due to technicall dumb dumb, lists are now json
 ## Authentication
 ### User Login
 **Endpoint:** `POST /api/auth/login`  
