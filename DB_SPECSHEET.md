@@ -294,8 +294,7 @@ Search flags and filters are handled backend
       {
         "post_id": "INT",
         "title": "string",
-        "main_text": "string",
-        "timestamp": "timestamp"
+        "timestamp": "INT"
       }
     ]
   }
