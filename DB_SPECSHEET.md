@@ -49,7 +49,7 @@
   MAIN_TEXT      TEXT        CHECK (LENGTH < 100k)              Post body
   AUTH_ID        INT         NOT NULL                           Author ID (FK. User.ID)
   COM_ID         INT         NOT NULL                           Community ID (FK. Community.ID)
-  TIMESTAMP      TIMESTAMP   NOT NULL                           Time of post
+  TIMESTAMP      INT         NOT NULL                           Time of post
   LIKES          INT         NOT NULL, DEFAULT 0                Likes on post
   DISLIKES       INT         NOT NULL, DEFAULT 0                Dislikes on post
   POST_ID_REF    INT                                            Refference to original post (for reposts) (FK. Post.ID)
