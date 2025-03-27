@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Gnuf.Models.DTOs.Auth;
+using System.Text.Json.Serialization;
 
 [ApiController]
 [Route("api/auth")]
