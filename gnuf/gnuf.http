@@ -1,4 +1,4 @@
-@database_HostAddress = http://localhost:9012
+@database_HostAddress = http://localhost:5047
 
 ### Login
 POST {{database_HostAddress}}/api/auth/login
