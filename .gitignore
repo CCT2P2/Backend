@@ -1,0 +1,45 @@
+# Build directories
+/bin/
+//bin
+/obj/
+//obj
+
+# User-specific settings
+*.DotSettings.user
+
+# Build output
+*.dll
+*.exe
+*.pdb
+*.cache
+*.json
+*.g.cs
+*.g.props
+*.g.targets
+
+# Static web assets
+staticwebassets/
+*.staticwebassets.*
+
+# NuGet
+*.nupkg
+project.lock.json
+project.fragment.lock.json
+*.nuget.props
+*.nuget.targets
+*.nuget.dgspec.json
+*.nuget.g.props
+*.nuget.g.targets
+
+# Rider / JetBrains
+.idea/
+*.sourcelink.json
+*.rider.*
+
+# OS generated
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
