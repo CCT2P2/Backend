@@ -9,7 +9,7 @@ namespace database
 
         public Database()
         {
-            _connection = new SqliteConnection("Data Source=../data/GNUF.sqlite;");
+            _connection = new SqliteConnection("Data Source=data/GNUF.sqlite;");
             OpenConnection();
         }
 
