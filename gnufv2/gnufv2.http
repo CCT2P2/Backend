@@ -1,0 +1,156 @@
+
+@database_HostAddress = http://localhost:5047
+
+### Login
+POST {{database_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "string",
+  "password": "string"
+}
+
+### Register
+POST {{database_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "string",
+  "username": "string",
+  "password": "string"
+}
+
+### Get User Profile
+GET {{database_HostAddress}}/api/user/profile/{user_id}
+Accept: application/json
+
+### Delete User Account
+DELETE {{database_HostAddress}}/api/user/remove/{user_id}
+Accept: application/json
+
+### Update User Profile (user)
+PUT {{database_HostAddress}}/api/user/update/user/{user_id}
+Content-Type: application/json
+
+{
+  "img_path": "string",
+  "password": "string"
+}
+
+### Update User Profile (backend)
+PUT {{database_HostAddress}}/api/user/update/backend/{user_id}
+Content-Type: application/json
+
+{
+  "communities": [1, 2],
+  "POST_IDs": [3, 4],
+  "TAGS": [5, 6]
+}
+
+### Create Community
+POST {{database_HostAddress}}/api/community/create
+Content-Type: application/json
+
+{
+  "name": "string",
+  "description": "string",
+  "img_path": "string",
+  "tags": [1, 2]
+}
+
+### Get Community
+GET {{database_HostAddress}}/api/community/details/{community_id}
+Accept: application/json
+
+### Update Community (user)
+PUT {{database_HostAddress}}/api/community/update/details/{community_id}
+Content-Type: application/json
+
+{
+  "description": "string",
+  "img_path": "string"
+}
+
+### Update Community (backend)
+PUT {{database_HostAddress}}/api/community/update/backend/{community_id}
+Content-Type: application/json
+
+{
+  "member_count": 100,
+  "TAGS": [1, 2],
+  "POST_IDs": [3, 4]
+}
+
+### Delete Community
+DELETE {{database_HostAddress}}/api/community/remove/{community_id}
+Accept: application/json
+
+### Create Post
+POST {{database_HostAddress}}/api/post/create
+Content-Type: application/json
+
+{
+  "title": "string",
+  "main_text": "string",
+  "auth_id": 1,
+  "com_id": 2,
+  "post_id_ref": 0,
+  "comment_flag": false
+}
+
+### Get Post
+GET {{database_HostAddress}}/api/post/view/{post_id}
+Accept: application/json
+
+### Update Post (user)
+PUT {{database_HostAddress}}/api/post/update/user/{post_id}
+Content-Type: application/json
+
+{
+  "title": "string",
+  "main_text": "string"
+}
+
+### Update Post (backend)
+PUT {{database_HostAddress}}/api/post/update/backend/{post_id}
+Content-Type: application/json
+
+{
+  "COMMENT_CNT": 5,
+  "LIKES": 10,
+  "DISLIKES": 2,
+  "COMMENTS": [6, 7]
+}
+
+### Delete Post
+DELETE {{database_HostAddress}}/api/post/remove/{post_id}
+Accept: application/json
+
+### Like / Dislike Post
+PUT {{database_HostAddress}}/api/post/vote/{post_id}
+Content-Type: application/json
+
+{
+  "likes": 12,
+  "dislikes": 3
+}
+
+### Add Comments to Post
+PUT {{database_HostAddress}}/api/post/comments/{post_id}
+Content-Type: application/json
+
+{
+  "Comments": [8, 9]
+}
+
+### Search Posts
+GET {{database_HostAddress}}/api/search/posts?q=example
+Accept: application/json
+
+### Search Communities
+GET {{database_HostAddress}}/api/search/communities?q=example
+Accept: application/json
+
+### Search Users
+GET {{database_HostAddress}}/api/search/users?q=example
+Accept: application/json
