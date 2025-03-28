@@ -2,6 +2,6 @@ namespace Gnuf.Models.DTOs.Post
 {
     public class AddCommentsRequest
     {
-        public List<int> Comments { get; set; }
+        public required List<int> Comments { get; set; }
     }
 }

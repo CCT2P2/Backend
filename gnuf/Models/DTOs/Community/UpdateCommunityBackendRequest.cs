@@ -3,8 +3,8 @@ namespace Gnuf.Models.DTOs.Community
 {
     public class UpdateCommunityBackendRequest
     {
-        public int MemberCount { get; set; }
-        public List<int> Tags { get; set; }
-        public List<int> PostIDs { get; set; }
+        public required int MemberCount { get; set; }
+        public required List<int> Tags { get; set; }
+        public required List<int> PostIDs { get; set; }
     }
 }

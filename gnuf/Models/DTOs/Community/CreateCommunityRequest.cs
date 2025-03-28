@@ -2,9 +2,9 @@ namespace Gnuf.Models.DTOs.Community
 {
     public class CreateCommunityRequest
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string ImgPath { get; set; }
-        public List<int> Tags { get; set; }
+        public required string Name { get; set; }
+        public required string Description { get; set; }
+        public required string ImgPath { get; set; }
+        public required List<int> Tags { get; set; }
     }
 }

@@ -2,11 +2,11 @@ namespace Gnuf.Models.DTOs.Post
 {
     public class CreatePostRequest
     {
-        public string Title { get; set; }
-        public string MainText { get; set; }
-        public int AuthId { get; set; }
-        public int ComId { get; set; }
-        public int PostIdRef { get; set; }
-        public bool CommentFlag { get; set; }
+        public required string Title { get; set; }
+        public required string MainText { get; set; }
+        public required int AuthId { get; set; }
+        public required int ComId { get; set; }
+        public required int PostIdRef { get; set; }
+        public required bool CommentFlag { get; set; }
     }
 }
