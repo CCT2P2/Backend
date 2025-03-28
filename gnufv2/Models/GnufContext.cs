@@ -9,4 +9,5 @@ public class GnufContext : DbContext
     public GnufContext(DbContextOptions<GnufContext> options) : base(options) { }
 
     public DbSet<User> Users { get; set; } = null!;
+    // add for post and community 
 }
