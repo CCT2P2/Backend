@@ -21,9 +21,12 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
+
+        Console.WriteLine("test");
         // Check if user exists
         if (_context.Users.Any(u => u.Username == request.Username))
             return Conflict("Username already exists");
+
 
         var user = new User
         {
