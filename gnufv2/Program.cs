@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Use SQLite DB file
 builder.Services.AddDbContext<GnufContext>(options =>
-    options.UseSqlite("Data Source=../data/GNUF.sqlite"));
+    options.UseSqlite("Data Source=database/GNUF.sqlite"));
 
 builder.Services.AddControllers();
 var app = builder.Build();

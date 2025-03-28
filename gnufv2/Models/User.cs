@@ -21,18 +21,4 @@ public class User
     [Column("PASSWORD")]
     public string Password { get; set; } = string.Empty;
 
-    [Column("IMAGE_PATH")]
-    public string? ImagePath { get; set; }
-
-    [Column("POST_IDS")]
-    public string? PostIds { get; set; }
-
-    [Column("COMM_IDS")]
-    public string? CommentIds { get; set; }
-
-    [Column("TAGS")]
-    public string? Tags { get; set; }
-
-    [Column("ADMIN")]
-    public bool IsAdmin { get; set; }
 }

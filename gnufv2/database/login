@@ -1,0 +1,7 @@
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Date: Fri, 28 Mar 2025 12:40:19 GMT
+Server: Kestrel
+Transfer-Encoding: chunked
+
+{"userId":14,"username":"dick"}
