@@ -8,10 +8,11 @@ namespace Gnuf.Models;
 public class Community
 {
     [Key]
-    [Column ( "Community_Id")]
-    public int CommunityID { get; set; }
+    [Column ( " COMMUNITY_ID")]
+    public int CommunityID { get; set; }    
 
-    [Column("Name")] public string Name { get; set; } = string.Empty;
+    [Column("Name")] 
+    public string Name { get; set; } = string.Empty;
 
     [Column("DESCRIPTION")]
     public string Description { get; set; } = string.Empty;
@@ -20,12 +21,12 @@ public class Community
     public int MemberCount { get; set; } = 0; 
     
     [Column ("IMG_PATH")]
-    public string Img { get; set; } = string.Empty;
+    public string? Img { get; set; } 
     
-    [Column ("TAGS")]
+    [Column ("TAGS", TypeName= "integer []" )]
     public List<int> Tags { get; set; } = new List<int>(); 
     
-    [Column ("POST_ID")]
+    [Column ("POST_ID", TypeName= "integer []")]
     public List<int> PostID  { get; set; } = new List<int>();
     
     
