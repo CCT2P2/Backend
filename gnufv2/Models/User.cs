@@ -12,13 +12,34 @@ public class UserStructure
     [Column("USER_ID")]
     public int UserId { get; set; }
 
+    [Required]
     [Column("EMAIL")]
+    [EmailAddress]
     public string Email { get; set; } = string.Empty;
 
-    [Column("USER_NAME")]
+    [Required]
+    [Column("USERNAME")]
+    [MaxLength(100)]
     public string Username { get; set; } = string.Empty;
 
+    [Required]
     [Column("PASSWORD")]
+    [MaxLength(1000)]
     public string Password { get; set; } = string.Empty;
 
+    [Column("IMG_PATH")]
+    public string? ImagePath { get; set; }
+
+    [Column("POST_IDs")]
+    public string? PostIds { get; set; }
+
+    [Column("COMMUNITY_IDs")]
+    public string? CommunityIds { get; set; }
+
+    [Required]
+    [Column("ADMIN")]
+    public int IsAdmin { get; set; } = 0;
+
+    [Column("TAGS")]
+    public string? Tags { get; set; }
 }
