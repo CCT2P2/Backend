@@ -297,3 +297,11 @@
 /home/slindau/Documents/P2/Backend/gnufv2/obj/Debug/net9.0/gnufv2.pdb
 /home/slindau/Documents/P2/Backend/gnufv2/obj/Debug/net9.0/gnufv2.genruntimeconfig.cache
 /home/slindau/Documents/P2/Backend/gnufv2/obj/Debug/net9.0/ref/gnufv2.dll
+C:\Users\burhe\RiderProjects\p2\Backend\gnufv2\obj\Debug\net9.0\gnufv2.csproj.AssemblyReference.cache
+C:\Users\burhe\RiderProjects\p2\Backend\gnufv2\obj\Debug\net9.0\gnufv2.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\burhe\RiderProjects\p2\Backend\gnufv2\obj\Debug\net9.0\gnufv2.AssemblyInfoInputs.cache
+C:\Users\burhe\RiderProjects\p2\Backend\gnufv2\obj\Debug\net9.0\gnufv2.AssemblyInfo.cs
+C:\Users\burhe\RiderProjects\p2\Backend\gnufv2\obj\Debug\net9.0\gnufv2.csproj.CoreCompileInputs.cache
+C:\Users\burhe\RiderProjects\p2\Backend\gnufv2\obj\Debug\net9.0\gnufv2.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\burhe\RiderProjects\p2\Backend\gnufv2\obj\Debug\net9.0\gnufv2.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\burhe\RiderProjects\p2\Backend\gnufv2\obj\Debug\net9.0\gnufv2.sourcelink.json

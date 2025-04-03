@@ -23,9 +23,9 @@ public class PostController : ControllerBase
     {
         var newPost = new Post
         {
-            title = post.title,
-            main_text = post.main_text,
-            auth_id = post.auth_id,
+            Title = post.title,
+            Maintext = post.main_text,
+            Auth_id = post.auth_id,
             com_id = post.com_id,
             post_id_ref = post.post_id_ref,
             comment_flag = post.comment_flag,

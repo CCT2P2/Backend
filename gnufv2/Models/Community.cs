@@ -8,7 +8,7 @@ namespace Gnuf.Models;
 public class CommunityStructure
 {
     [Key]
-    [Column(" COMMUNITY_ID")]
+    [Column("COMMUNITY_ID")]
     public int CommunityID { get; set; }
 
     [Column("Name")]
