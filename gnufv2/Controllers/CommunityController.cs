@@ -1,8 +1,8 @@
-
-// Controllers/CommunityController.cs
+// Controllers/ControllersCommunityController.cs
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Gnuf.Models;
+using Gnuf.Models.Community;
+using Microsoft.EntityFrameworkCore;
 
 namespace Gnuf.Controllers;
 
@@ -11,9 +11,9 @@ namespace Gnuf.Controllers;
 public class CommunityController : ControllerBase
 {
     private readonly GnufContext _context;
-
-    public CommunityController(GnufContext context)
-    {
+    
+    public AuthController(GnufContext context) 
+    { 
         _context = context;
     }
 
@@ -28,7 +28,7 @@ public class CommunityController : ControllerBase
 
         _context.Community.Add(community);
         await _context.SaveChangesAsync();
-        return Ok();
+        return Ok( new community.CommunityID);
     }
 
     // 4.3.2 Get community details

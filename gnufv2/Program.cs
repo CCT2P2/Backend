@@ -1,4 +1,3 @@
-
 using Gnuf.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,4 +17,5 @@ app.Use(async (context, next) =>
 });
 
 app.MapControllers();
+
 app.Run();
