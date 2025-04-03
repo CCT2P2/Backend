@@ -34,14 +34,14 @@ public class UserController : ControllerBase
 
         var result = new
         {
-            id = user.Id,
-            email = user.email,
-            username = user.username,
-            img_path = user.img_path,
-            post_ids = user.PostIds.Select(p => p.Id),
-            community_ids = user.CommunityIds.Select(c => c.Id),
-            Tags = user.Tags.Select(t => t.Id),
-            admin = user.admin
+            id = user.UserId,
+            email = user.Email,
+            username = user.Username,
+            img_path = user.ImagePath,
+            //post_ids = user.PostIds.Select(p => Post.PostId),
+            //community_ids = user.CommunityIds.Select(c => c.Id),
+            //Tags = user.Tags.Select(t => t.Id),
+            admin = user.IsAdmin
         };
 
         return Ok(result);
@@ -72,12 +72,13 @@ public class UserController : ControllerBase
             return NotFound();
         }
 
-        user.ImagePath = update.img_path;
-        user.Password = update.password;
+        user.ImagePath = update.ImgPath;
+        user.Password = update.Password;
 
         await _context.SaveChangesAsync();
         return Ok();
     }
+
 
     // 4.2.4 Update User Profile (backend)
     [HttpPut("update/backend/{user_id}")]
@@ -95,44 +96,49 @@ public class UserController : ControllerBase
         }
 
         user.PostIds.Clear();
-        foreach (var postId in update.POST_IDs)
+        foreach (var postId in update.PostIds)
         {
             var post = await _context.PostIds.FindAsync(postId);
             if (post != null)
+            {
                 user.PostIds.Add(post);
+            }
         }
 
         user.CommunityIds.Clear();
         foreach (var communityId in update.CommunityIds)
         {
-            var com = await _context.Community.FindAsync(communityId);
-            if (com != null)
-                user.CommunityIds.Add(com);
+            var community = await _context.Community.FindAsync(communityId);
+            if (community != null)
+            {
+                user.CommunityIds.Add(community);
+            }
         }
 
         user.Tags.Clear();
-        foreach (var tagId in update.Tags)
+        foreach (var tagId in update.TagIds)
         {
             var tag = await _context.Tags.FindAsync(tagId);
             if (tag != null)
+            {
                 user.Tags.Add(tag);
+            }
         }
 
         await _context.SaveChangesAsync();
         return Ok();
     }
-}
 
-// DTOs
-public class UpdateUserDto
-{
-    public string img_path { get; set; }
-    public string password { get; set; }
-}
+    // DTOs
+    public class UpdateUserDto
+    {
+        public string ImgPath { get; set; }
+        public string Password { get; set; }
+    }
 
-public class BackendUserUpdateDto
-{
-    public List<int> CommunityIds { get; set; } = new();
-    public List<int> POST_IDs { get; set; } = new();
-    public List<int> Tags { get; set; } = new();
-}
+    public class BackendUserUpdateDto
+    {
+        public List<int> CommunityIds { get; set; } = new();
+        public List<int> PostIds { get; set; } = new();
+        public List<int> TagIds { get; set; } = new();
+    }
