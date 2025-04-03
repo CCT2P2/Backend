@@ -16,13 +16,13 @@ public class PostStructure
     [Column("TITLE")]
     public string Title { get; set; } = string.Empty;
 
-    [Column("MAIN_TEXT")]
+    [Column("MAIN")]
     public string MainText { get; set; } = string.Empty;
     
-    [Column("AUTH_ID")]
+    [Column("AUTHOR_ID")]
     public int auth_id { get; set; }
     
-    [Column("COM_ID")]
+    [Column("COMMUNITY_ID")]
     public int com_id { get; set; }
     
     [Column("TIMESTAMP")]
@@ -47,14 +47,8 @@ public class PostStructure
     public string? comments { get; set; } = string.Empty;
 
 
-
-
+    [Column("IMG_PATH")]
+    public string? Img { get; set; }
+    
 }
-    
-    
-    
-    
-
-
-
 
