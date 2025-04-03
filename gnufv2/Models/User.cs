@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Gnuf.Models;
 
 [Table("USER")]
-public class User
+public class UserStructure
 {
     [Key]
     [Column("USER_ID")]

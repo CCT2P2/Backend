@@ -28,7 +28,7 @@ public class AuthController : ControllerBase
             return Conflict("Username already exists");
 
 
-        var user = new User
+        var user = new UserStructure
         {
             Email = request.Email,
             Username = request.Username,

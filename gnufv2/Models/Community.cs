@@ -5,29 +5,29 @@ namespace Gnuf.Models;
 
 
 [Table("community")]
-public class Community
+public class CommunityStructure
 {
     [Key]
-    [Column ( " COMMUNITY_ID")]
-    public int CommunityId { get; set; }    
+    [Column(" COMMUNITY_ID")]
+    public int CommunityID { get; set; }
 
-    [Column("Name")] 
+    [Column("Name")]
     public string Name { get; set; } = string.Empty;
 
     [Column("DESCRIPTION")]
     public string Description { get; set; } = string.Empty;
-    
-    [Column ("MEMBER_COUNT")]
-    public int MemberCount { get; set; } = 0; 
-    
-    [Column ("IMG_PATH")]
-    public string? Img { get; set; } 
-    
-    [Column ("TAGS")]
-    public List<int> Tags { get; set; } = new(); 
-    
-    [Column ("POST_ID")]
-    public List<int> PostIds { get; set; } = new ();
-    
-    
+
+    [Column("MEMBER_COUNT")]
+    public int MemberCount { get; set; } = 0;
+
+    [Column("IMG_PATH")]
+    public string? Img { get; set; }
+
+    [Column("TAGS", TypeName = "integer []")]
+    public List<int> Tags { get; set; } = new List<int>();
+
+    [Column("POST_ID", TypeName = "integer []")]
+    public List<int> PostID { get; set; } = new List<int>();
+
+
 }
