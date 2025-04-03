@@ -12,7 +12,7 @@ public class CommunityController : ControllerBase
 {
     private readonly GnufContext _context;
     
-    public AuthController(GnufContext context) 
+    public CommunityController(GnufContext context)
     { 
         _context = context;
     }
@@ -28,7 +28,7 @@ public class CommunityController : ControllerBase
 
         _context.Community.Add(community);
         await _context.SaveChangesAsync();
-        return Ok( new community.CommunityID);
+        return Ok(new { community.Id });
     }
 
     // 4.3.2 Get community details
@@ -61,7 +61,7 @@ public class CommunityController : ControllerBase
 
     // 4.3.3 Update community (user)
     [HttpPut("update/details/{community_id}")]
-    public async Task<ActionResult> UpdateCommunityDetails(int community_id, [FromBody] Community update)
+    public async Task<ActionResult> UpdateCommunityUser(int community_id, [FromBody] Community update)
     {
         var community = await _context.Community.FindAsync(community_id);
         if (community == null)
@@ -126,12 +126,4 @@ public class CommunityController : ControllerBase
         await _context.SaveChangesAsync();
         return Ok();
     }
-}
-
-// DTO for backend update
-public class BackendUpdateDto
-{
-    public int member_count { get; set; }
-    public List<int> TAGS { get; set; } = new();
-    public List<int> POST_IDs { get; set; } = new();
 }
