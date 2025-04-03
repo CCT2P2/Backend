@@ -23,11 +23,11 @@ public class CommunityStructure
     [Column("IMG_PATH")]
     public string? Img { get; set; }
 
-    [Column("TAGS", TypeName = "integer []")]
-    public List<int> Tags { get; set; } = new List<int>();
+    [Column("TAGS")]
+    public string Tags { get; set; } = string.Empty;
 
-    [Column("POST_ID", TypeName = "integer []")]
-    public List<int> PostID { get; set; } = new List<int>();
+    [Column("POST_ID")]
+    public string PostID { get; set; } = string.Empty;
 
 
 }
