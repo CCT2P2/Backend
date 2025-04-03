@@ -7,26 +7,26 @@ namespace Gnuf.Models;
 
 [Table("Post")]
 
-public class Post
+public class PostStructure
 {
     [Key]
-    [Column ( "POST_ID")]
-    public int PostID { get; set; }    
+    [Column("POST_ID")]
+    public int PostID { get; set; }
 
-    [Column("TITLE")] 
+    [Column("TITLE")]
     public string Title { get; set; } = string.Empty;
 
     [Column("DESCRIPTION")]
     public string Description { get; set; } = string.Empty;
-    
-    [Column ("MEMBER_COUNT")]
-    public int MemberCount { get; set; } = 0; 
-    
-    [Column ("IMG_PATH")]
-    public string? Img { get; set; } 
-    
-    
-    
-    
-    
+
+    [Column("MEMBER_COUNT")]
+    public int MemberCount { get; set; } = 0;
+
+    [Column("IMG_PATH")]
+    public string? Img { get; set; }
+
+
+
+
+
 }

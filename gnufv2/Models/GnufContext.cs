@@ -8,6 +8,7 @@ public class GnufContext : DbContext
 {
     public GnufContext(DbContextOptions<GnufContext> options) : base(options) { }
 
-    public DbSet<User> Users { get; set; } = null!;
-    // add for post and community 
+    public DbSet<UserStructure> Users { get; set; } = null!;
+    public DbSet<PostStructure> Posts { get; set; } = null!;
+    public DbSet<CommunityStructure> Communities { get; set; } = null!;
 }

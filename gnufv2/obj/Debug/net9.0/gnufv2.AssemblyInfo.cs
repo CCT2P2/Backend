@@ -13,11 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("gnufv2")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-<<<<<<< Updated upstream
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5a12568050ec61b5c6d565e740fb1a8d63897647")]
-=======
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d8e71c85ed316c2a6139353b3617cf6d5ddd2024")]
->>>>>>> Stashed changes
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+214245395d15e955754ce8af835dd07f2d665b61")]
 [assembly: System.Reflection.AssemblyProductAttribute("gnufv2")]
 [assembly: System.Reflection.AssemblyTitleAttribute("gnufv2")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
