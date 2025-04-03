@@ -16,17 +16,45 @@ public class PostStructure
     [Column("TITLE")]
     public string Title { get; set; } = string.Empty;
 
-    [Column("DESCRIPTION")]
-    public string Description { get; set; } = string.Empty;
-
-    [Column("MEMBER_COUNT")]
-    public int MemberCount { get; set; } = 0;
-
-    [Column("IMG_PATH")]
-    public string? Img { get; set; }
-
+    [Column("MAIN_TEXT")]
+    public string MainText { get; set; } = string.Empty;
+    
+    [Column("AUTH_ID")]
+    public int auth_id { get; set; }
+    
+    [Column("COM_ID")]
+    public int com_id { get; set; }
+    
+    [Column("TIMESTAMP")]
+    public int timestamp { get; set; }
+    
+    [Column("LIKES")]
+    public int likes { get; set; }
+    
+    [Column("DISLIKES")]
+    public int dislikes { get; set; }
+    
+    [Column("POST_ID_REF")]
+    public int? post_id_ref { get; set; }
+    
+    [Column("COMMENT_FLAG")]
+    public bool comment_flag { get; set; }
+    
+    [Column("COMMENT_CNT")]
+    public int comment_Count { get; set; }
+    
+    [Column("COMMENTS")]
+    public string? comments { get; set; } = string.Empty;
 
 
 
 
 }
+    
+    
+    
+    
+
+
+
+
