@@ -1,4 +1,5 @@
 import sqlite3
+import sys
 
 def show_all_content(db_path):
     conn = sqlite3.connect(db_path)
@@ -28,5 +29,4 @@ def show_all_content(db_path):
 
 # Usage example
 if __name__ == "__main__":
-    show_all_content("GNUF.sqlite")
-
+    show_all_content(sys.argv[1])
