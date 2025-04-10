@@ -10,6 +10,6 @@ public class GnufContext : DbContext
 
     public DbSet<UserStructure> Users { get; set; } = null!;
     public DbSet<PostStructure> Post { get; set; } = null!;
-    public DbSet<CommunityStructure> Communities { get; set; } = null!;
-    public DbSet<FeedbackStructure> Feedbacks { get; set; } = null!;
+    public DbSet<CommunityStructure> Community { get; set; } = null!;
+    public DbSet<FeedbackStructure> Feedback { get; set; } = null!;
 }
