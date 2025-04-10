@@ -11,15 +11,15 @@ namespace Gnuf.Controllers;
 public class CommunityController : ControllerBase
 {
     private readonly GnufContext _context;
-    
+
     public CommunityController(GnufContext context)
-    { 
+    {
         _context = context;
     }
 
     // 4.3.1 Create community
     [HttpPost("create")]
-    public async Task<ActionResult> CreateCommunity([FromBody] Community community)
+    public async Task<ActionResult> CreateCommunity([FromBody] CommunityStructure community)
     {
         if (_context.Community.Any(c => c.Name == community.Name))
         {
@@ -61,7 +61,7 @@ public class CommunityController : ControllerBase
 
     // 4.3.3 Update community (user)
     [HttpPut("update/details/{community_id}")]
-    public async Task<ActionResult> UpdateCommunityUser(int community_id, [FromBody] Community update)
+    public async Task<ActionResult> UpdateCommunityUser(int community_id, [FromBody] CommunityStructure update)
     {
         var community = await _context.Community.FindAsync(community_id);
         if (community == null)

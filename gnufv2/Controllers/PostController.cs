@@ -1,4 +1,3 @@
-
 // Controllers/PostController.cs
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,9 +18,9 @@ public class PostController : ControllerBase
 
     // 4.4.1 Create post
     [HttpPost("create")]
-    public async Task<ActionResult> CreatePost([FromBody] Post post)
+    public async Task<ActionResult> CreatePost([FromBody] PostStructure post)
     {
-        var newPost = new Post
+        var newPost = new PostStructure
         {
             Title = post.title,
             Maintext = post.main_text,
@@ -75,7 +74,7 @@ public class PostController : ControllerBase
 
     // 4.4.3 Update post (user)
     [HttpPut("update/user/{post_id}")]
-    public async Task<ActionResult> UpdatePostUser(int post_id, [FromBody] Post update)
+    public async Task<ActionResult> UpdatePostUser(int post_id, [FromBody] PostStructure update)
     {
         var post = await _context.Posts.FindAsync(post_id);
         if (post == null)

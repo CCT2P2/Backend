@@ -142,3 +142,4 @@ public class UserController : ControllerBase
         public List<int> PostIds { get; set; } = new();
         public List<int> TagIds { get; set; } = new();
     }
+}
