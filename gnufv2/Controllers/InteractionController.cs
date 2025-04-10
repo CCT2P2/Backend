@@ -1,63 +1,77 @@
-
-// Controllers/PostInteractionsController.cs
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Gnuf.Models;
 
-namespace Gnuf.Controllers;
-
-[ApiController]
-[Route("api/post")]
-public class PostInteractionsController : ControllerBase
+namespace Gnuf.Controllers
 {
-    private readonly GnufContext _context;
-
-    public PostInteractionsController(GnufContext context)
+    [ApiController]
+    [Route("api/post")]
+    public class PostInteractionsController : ControllerBase
     {
-        _context = context;
-    }
+        private readonly GnufContext _context;
 
-    // 4.5.1 Like / Dislike
-    [HttpPut("vote/{post_id}")]
-    public async Task<ActionResult> VoteOnPost(int post_id, [FromBody] PostStructure vote)
-    {
-        var post = await _context.Post.FindAsync(post_id);
-        if (post == null)
+        public PostInteractionsController(GnufContext context)
         {
-            return NotFound();
+            _context = context;
         }
 
-        post.likes = vote.likes;
-        post.dislikes = vote.dislikes;
-
-        await _context.SaveChangesAsync();
-        return Ok();
-    }
-    //TODO: fix this i dont know the problem
-    // 4.5.2 Add comments
-    [HttpPut("comments/{post_id}")]
-    public async Task<ActionResult> AddCommentsToPost(int post_id, [FromBody] PostStructure update)
-    {
-        var post = await _context.Post
-            .Include(p => p.comments)
-            .FirstOrDefaultAsync(p => p.PostID == post_id);
-
-        if (post == null)
+        // 4.5.1 Like / Dislike
+        [HttpPut("vote/{post_id}")]
+        public async Task<ActionResult> VoteOnPost(int post_id, [FromBody] PostStructure vote)
         {
-            return NotFound();
-        }
-
-        foreach (var commentId in update.comments)
-        {
-            var comment = await _context.comments.FindAsync(commentId);
-            if (comment != null && !post.comments.Any(c => c.postID == commentId))
+            var post = await _context.Post.FindAsync(post_id);
+            if (post == null)
             {
-                post.comments.Add(comment);
-                post.comment_count+= 1;
+                return NotFound();
             }
+
+            post.likes = vote.likes;
+            post.dislikes = vote.dislikes;
+
+            await _context.SaveChangesAsync();
+            return Ok();
         }
 
-        await _context.SaveChangesAsync();
-        return Ok();
+        // 4.5.2 Add comments (CSV-based)
+        [HttpPut("comments/{post_id}")]
+        public async Task<ActionResult> AddCommentsToPost(int post_id, [FromBody] PostStructure update)
+        {
+            var post = await _context.Post.FindAsync(post_id);
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            if (string.IsNullOrWhiteSpace(update.comments))
+            {
+                return BadRequest("No comments provided.");
+            }
+
+            var newCommentIds = update.comments
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(id => id.Trim())
+                .Where(id => !string.IsNullOrWhiteSpace(id))
+                .ToList();
+
+            var existingComments = string.IsNullOrWhiteSpace(post.comments)
+                ? new List<string>()
+                : post.comments.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                               .Select(id => id.Trim())
+                               .ToList();
+
+            foreach (var commentId in newCommentIds)
+            {
+                if (!existingComments.Contains(commentId))
+                {
+                    existingComments.Add(commentId);
+                    post.comment_Count += 1;
+                }
+            }
+
+            post.comments = string.Join(",", existingComments);
+
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
     }
 }

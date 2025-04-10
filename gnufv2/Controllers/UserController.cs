@@ -1,132 +1,96 @@
-
-// Controllers/UserController.cs
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Gnuf.Models;
 
-namespace Gnuf.Controllers;
-
-[ApiController]
-[Route("api/user")]
-public class UserController : ControllerBase
+namespace Gnuf.Controllers
 {
-    private readonly GnufContext _context;
-
-    public UserController(GnufContext context)
+    [ApiController]
+    [Route("api/user")]
+    public class UserController : ControllerBase
     {
-        _context = context;
-    }
+        private readonly GnufContext _context;
 
-    // 4.2.1 Get User Profile
-    [HttpGet("profile/{user_id}")]
-    public async Task<ActionResult> GetUserProfile(int user_id)
-    {
-        var user = await _context.Users
-            .Include(u => u.PostIds)
-            .Include(u => u.CommunityIds)
-            .Include(u => u.Tags)
-            .FirstOrDefaultAsync(u => u.UserId == user_id);
-
-        if (user == null)
+        public UserController(GnufContext context)
         {
-            return NotFound();
+            _context = context;
         }
 
-        var result = new
+        // 4.2.1 Get User Profile
+        [HttpGet("profile/{user_id}")]
+        public async Task<ActionResult> GetUserProfile(int user_id)
         {
-            id = user.UserId,
-            email = user.Email,
-            username = user.Username,
-            img_path = user.ImagePath,
-            //post_ids = user.PostIds.Select(p => Post.PostId),
-            //community_ids = user.CommunityIds.Select(c => c.Id),
-            //Tags = user.Tags.Select(t => t.Id),
-            admin = user.IsAdmin
-        };
-
-        return Ok(result);
-    }
-
-    // 4.2.2 Delete User Account
-    [HttpDelete("remove/{user_id}")]
-    public async Task<ActionResult> DeleteUser(int user_id)
-    {
-        var user = await _context.Users.FindAsync(user_id);
-        if (user == null)
-        {
-            return NotFound();
-        }
-
-        _context.Users.Remove(user);
-        await _context.SaveChangesAsync();
-        return Ok();
-    }
-
-    // 4.2.3 Update User Profile (user)
-    [HttpPut("update/user/{user_id}")]
-    public async Task<ActionResult> UpdateUserProfile(int user_id, [FromBody] UserStructure update)
-    {
-        var user = await _context.Users.FindAsync(user_id);
-        if (user == null)
-        {
-            return NotFound();
-        }
-
-        user.ImagePath = update.ImagePath;
-        user.Password = update.Password;
-
-        await _context.SaveChangesAsync();
-        return Ok();
-    }
-
-    //TODO: fix this its not a list but a comma seperated string
-    // 4.2.4 Update User Profile (backend)
-    [HttpPut("update/backend/{user_id}")]
-    public async Task<ActionResult> UpdateUserBackend(int user_id, [FromBody] UserStructure update)
-    {
-        var user = await _context.Users
-            .Include(u => u.PostIds)
-            .Include(u => u.CommunityIds)
-            .Include(u => u.Tags)
-            .FirstOrDefaultAsync(u => u.UserId == user_id);
-
-        if (user == null)
-        {
-            return NotFound();
-        }
-
-        user.PostIds.Clear();
-        foreach (var postId in update.PostIds)
-        {
-            var post = await _context.PostIds.FindAsync(postId);
-            if (post != null)
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == user_id);
+            if (user == null)
             {
-                user.PostIds.Add(post);
+                return NotFound();
             }
-        }
 
-        user.CommunityIds.Clear();
-        foreach (var communityId in update.CommunityIds)
-        {
-            var community = await _context.Community.FindAsync(communityId);
-            if (community != null)
+            var result = new
             {
-                user.CommunityIds.Add(community);
-            }
+                id = user.UserId,
+                email = user.Email,
+                username = user.Username,
+                img_path = user.ImagePath,
+                post_ids = user.PostIds,
+                community_ids = user.CommunityIds,
+                tags = user.Tags,
+                admin = user.IsAdmin
+            };
+
+            return Ok(result);
         }
 
-        user.Tags.Clear();
-        foreach (var tagId in update.Tags)
+        // 4.2.2 Delete User Account
+        [HttpDelete("remove/{user_id}")]
+        public async Task<ActionResult> DeleteUser(int user_id)
         {
-            var tag = await _context.Tags.FindAsync(tagId);
-            if (tag != null)
+            var user = await _context.Users.FindAsync(user_id);
+            if (user == null)
             {
-                user.Tags.Add(tag);
+                return NotFound();
             }
+
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+            return Ok();
         }
 
-        await _context.SaveChangesAsync();
-        return Ok();
+        // 4.2.3 Update User Profile (user)
+        [HttpPut("update/user/{user_id}")]
+        public async Task<ActionResult> UpdateUserProfile(int user_id, [FromBody] UserStructure update)
+        {
+            var user = await _context.Users.FindAsync(user_id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            if (!string.IsNullOrWhiteSpace(update.ImagePath))
+                user.ImagePath = update.ImagePath;
+
+            if (!string.IsNullOrWhiteSpace(update.Password))
+                user.Password = update.Password;
+
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+        // 4.2.4 Update User Profile (backend)
+        [HttpPut("update/backend/{user_id}")]
+        public async Task<ActionResult> UpdateUserBackend(int user_id, [FromBody] UserStructure update)
+        {
+            var user = await _context.Users.FindAsync(user_id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            user.PostIds = update.PostIds ?? "";
+            user.CommunityIds = update.CommunityIds ?? "";
+            user.Tags = update.Tags ?? "";
+
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
     }
-
 }
