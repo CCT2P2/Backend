@@ -3,7 +3,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Gnuf.Models;
-
 namespace Gnuf.Controllers;
 
 [ApiController]
@@ -23,16 +22,17 @@ public class PostController : ControllerBase
     {
         var newPost = new Post
         {
-            Title = post.title,
-            Maintext = post.main_text,
-            Auth_id = post.auth_id,
-            com_id = post.com_id,
-            post_id_ref = post.post_id_ref,
-            comment_flag = post.comment_flag,
-            timestamp = DateTime.UtcNow,
-            likes = 0,
-            dislikes = 0,
-            comment_count = 0
+            Title = post.Title,
+            MainText = post.MainText,
+            AuthId = post.AuthId,
+            ComId = post.ComId,
+            PostIdRef = post.PostIdRef,
+            CommentFlag = post.CommentFlag,
+            Timestamp = DateTime.UtcNow,  // Fixed timestamp handling
+            Likes = 0,
+            Dislikes = 0,
+            CommentCount = 0,
+            Comments = new List<Comment>() // Ensure initialized
         };
 
         _context.Posts.Add(newPost);
