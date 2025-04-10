@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Gnuf.Models;
 using System.Linq;
+using Gnuf.Models.Posts;
 
 namespace Gnuf.Controllers
 {
@@ -127,6 +128,76 @@ namespace Gnuf.Controllers
             await _context.SaveChangesAsync();
             return Ok();
         }
+        
+        
+        
+        
+        
+        //4.4.6 Get Multiple Posts
+        [HttpGet("posts")]
+        public async Task<ActionResult> GetPosts([FromQuery] PostQueryParameters query)
+        {
+            var postsQuery = _context.Post.AsQueryable();
+
+            if (query.CommunityId.HasValue)
+                postsQuery = postsQuery.Where(p => p.com_id == query.CommunityId.Value);
+
+            if (query.UserId.HasValue)
+                postsQuery = postsQuery.Where(p => p.auth_id == query.UserId.Value);
+
+            if (query.TimestampStart.HasValue)
+                postsQuery = postsQuery.Where(p =>
+                    p.timestamp >= DateTimeOffset.FromUnixTimeSeconds(query.TimestampStart.Value).UtcDateTime);
+
+            if (query.TimestampEnd.HasValue)
+                postsQuery = postsQuery.Where(p =>
+                    p.timestamp <= DateTimeOffset.FromUnixTimeSeconds(query.TimestampEnd.Value).UtcDateTime);
+
+            // Sorting
+            postsQuery = query.SortBy.ToLower() switch
+            {
+                "likes" => query.SortOrder == "asc"
+                    ? postsQuery.OrderBy(p => p.likes)
+                    : postsQuery.OrderByDescending(p => p.likes),
+                "comments" => query.SortOrder == "asc"
+                    ? postsQuery.OrderBy(p => p.comment_Count)
+                    : postsQuery.OrderByDescending(p => p.comment_Count),
+                _ => query.SortOrder == "asc"
+                    ? postsQuery.OrderBy(p => p.timestamp)
+                    : postsQuery.OrderByDescending(p => p.timestamp),
+            };
+
+            int totalCount = await postsQuery.CountAsync();
+            int limit = Math.Clamp(query.Limit, 1, 100);
+            int offset = Math.Max(query.Offset, 0);
+
+            var posts = await postsQuery
+                .Skip(offset)
+                .Take(limit)
+                .Select(p => new
+                {
+                    post_id = p.PostID,
+                    title = p.Title,
+                    main_text = p.MainText,
+                    auth_id = p.auth_id,
+                    com_id = p.com_id,
+                    timestamp = ((DateTimeOffset)p.timestamp).ToUnixTimeSeconds(),
+                    likes = p.likes,
+                    dislikes = p.dislikes,
+                    post_id_ref = p.post_id_ref,
+                    comment_flag = p.comment_flag,
+                    comment_count = p.comment_Count
+                })
+                .ToListAsync();
+
+            return Ok(new
+            {
+                posts = posts,
+                total_count = totalCount,
+                next_offset = offset + posts.Count
+            });
+        }
+
     }
 
 }
