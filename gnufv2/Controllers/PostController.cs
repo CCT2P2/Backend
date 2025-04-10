@@ -23,30 +23,30 @@ public class PostController : ControllerBase
         {
             Title = post.Title,
             MainText = post.MainText,
-            AuthId = post.AuthId,
-            ComId = post.ComId,
-            PostIdRef = post.PostIdRef,
-            CommentFlag = post.CommentFlag,
-            Timestamp = DateTime.UtcNow,  // Fixed timestamp handling
-            Likes = 0,
-            Dislikes = 0,
-            CommentCount = 0,
-            Comments = new List<Comment>() // Ensure initialized
+            auth_id = post.auth_id,
+            com_id = post.com_id,
+            post_id_ref = post.post_id_ref,
+            comment_flag = post.comment_flag,
+            timestamp = DateTime.UtcNow,  // Fixed timestamp handling
+            likes = 0,
+            dislikes = 0,
+            comment_Count = 0,
+            comments = "" // Ensure initialized
         };
 
-        _context.Posts.Add(newPost);
+        _context.Post.Add(newPost);
         await _context.SaveChangesAsync();
 
-        return Ok(new { post_id = newPost.Id });
+        return Ok(new { post_id = newPost.PostID });
     }
 
     // 4.4.2 Get post
     [HttpGet("view/{post_id}")]
     public async Task<ActionResult> GetPost(int post_id)
     {
-        var post = await _context.Posts
-            .Include(p => p.Comments)
-            .FirstOrDefaultAsync(p => p.Id == post_id);
+        var post = await _context.Post
+            .Include(p => p.comments)
+            .FirstOrDefaultAsync(p => p.PostID == post_id);
 
         if (post == null)
         {
@@ -55,9 +55,9 @@ public class PostController : ControllerBase
 
         var response = new
         {
-            id = post.Id,
-            title = post.title,
-            main_text = post.main_text,
+            id = post.PostID,
+            title = post.Title,
+            main_text = post.MainText,
             auth_id = post.auth_id,
             com_id = post.com_id,
             timestamp = post.timestamp,
@@ -65,8 +65,8 @@ public class PostController : ControllerBase
             dislikes = post.dislikes,
             post_id_ref = post.post_id_ref,
             comment_flag = post.comment_flag,
-            comment_count = post.comment_count,
-            comments = post.Comments.Select(c => c.Id)
+            comment_count = post.comment_Count,
+            comments = post.comments
         };
 
         return Ok(response);
@@ -76,43 +76,43 @@ public class PostController : ControllerBase
     [HttpPut("update/user/{post_id}")]
     public async Task<ActionResult> UpdatePostUser(int post_id, [FromBody] PostStructure update)
     {
-        var post = await _context.Posts.FindAsync(post_id);
+        var post = await _context.Post.FindAsync(post_id);
         if (post == null)
         {
             return NotFound();
         }
 
-        post.title = update.title;
-        post.main_text = update.main_text;
+        post.Title = update.Title;
+        post.MainText = update.MainText;
 
         await _context.SaveChangesAsync();
         return Ok();
     }
-
+    //TODO: fix this its not a list but a comma seperated string
     // 4.4.4 Update post (backend)
     [HttpPut("update/backend/{post_id}")]
     public async Task<ActionResult> UpdatePostBackend(int post_id, [FromBody] PostBackendUpdateDto update)
     {
-        var post = await _context.Posts
-            .Include(p => p.Comments)
-            .FirstOrDefaultAsync(p => p.Id == post_id);
+        var post = await _context.Post
+            .Include(p => p.comments)
+            .FirstOrDefaultAsync(p => p.PostID == post_id);
 
         if (post == null)
         {
             return NotFound();
         }
 
-        post.comment_count = update.COMMENT_CNT;
+        post.comment_Count = update.COMMENT_CNT;
         post.likes = update.LIKES;
         post.dislikes = update.DISLIKES;
 
-        post.Comments.Clear();
+        post.comments.Clear();
         foreach (var commentId in update.COMMENTS)
         {
-            var comment = await _context.Comments.FindAsync(commentId);
+            var comment = await _context.comments.FindAsync(commentId);
             if (comment != null)
             {
-                post.Comments.Add(comment);
+                post.comments.Add(comment);
             }
         }
 
@@ -124,13 +124,13 @@ public class PostController : ControllerBase
     [HttpDelete("remove/{post_id}")]
     public async Task<ActionResult> DeletePost(int post_id)
     {
-        var post = await _context.Posts.FindAsync(post_id);
+        var post = await _context.Post.FindAsync(post_id);
         if (post == null)
         {
             return NotFound();
         }
 
-        _context.Posts.Remove(post);
+        _context.Post.Remove(post);
         await _context.SaveChangesAsync();
         return Ok();
     }

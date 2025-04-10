@@ -19,9 +19,9 @@ public class PostInteractionsController : ControllerBase
 
     // 4.5.1 Like / Dislike
     [HttpPut("vote/{post_id}")]
-    public async Task<ActionResult> VoteOnPost(int post_id, [FromBody] VoteDto vote)
+    public async Task<ActionResult> VoteOnPost(int post_id, [FromBody] PostStructure vote)
     {
-        var post = await _context.Posts.FindAsync(post_id);
+        var post = await _context.Post.FindAsync(post_id);
         if (post == null)
         {
             return NotFound();
@@ -33,43 +33,31 @@ public class PostInteractionsController : ControllerBase
         await _context.SaveChangesAsync();
         return Ok();
     }
-
+    //TODO: fix this i dont know the problem
     // 4.5.2 Add comments
     [HttpPut("comments/{post_id}")]
-    public async Task<ActionResult> AddCommentsToPost(int post_id, [FromBody] CommentRefDto dto)
+    public async Task<ActionResult> AddCommentsToPost(int post_id, [FromBody] PostStructure update)
     {
-        var post = await _context.Posts
-            .Include(p => p.Comments)
-            .FirstOrDefaultAsync(p => p.Id == post_id);
+        var post = await _context.Post
+            .Include(p => p.comments)
+            .FirstOrDefaultAsync(p => p.PostID == post_id);
 
         if (post == null)
         {
             return NotFound();
         }
 
-        foreach (var commentId in dto.Comments)
+        foreach (var commentId in update.comments)
         {
-            var comment = await _context.Comments.FindAsync(commentId);
-            if (comment != null && !post.Comments.Any(c => c.Id == commentId))
+            var comment = await _context.comments.FindAsync(commentId);
+            if (comment != null && !post.comments.Any(c => c.postID == commentId))
             {
-                post.Comments.Add(comment);
-                post.comment_count++;
+                post.comments.Add(comment);
+                post.comment_count+= 1;
             }
         }
 
         await _context.SaveChangesAsync();
         return Ok();
     }
-}
-
-// DTOs
-public class VoteDto
-{
-    public int likes { get; set; }
-    public int dislikes { get; set; }
-}
-
-public class CommentRefDto
-{
-    public List<int> Comments { get; set; } = new();
 }

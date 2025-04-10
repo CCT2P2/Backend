@@ -26,7 +26,7 @@ public class PostStructure
     public int com_id { get; set; }
     
     [Column("TIMESTAMP")]
-    public int timestamp { get; set; }
+    public DateTime timestamp { get; set; }
     
     [Column("LIKES")]
     public int likes { get; set; }

@@ -28,17 +28,19 @@ public class CommunityController : ControllerBase
 
         _context.Community.Add(community);
         await _context.SaveChangesAsync();
-        return Ok(new { community.Id });
+        return Ok(new { community.CommunityID });
     }
 
+    
+    //TODO: fix
     // 4.3.2 Get community details
     [HttpGet("details/{community_id}")]
     public async Task<ActionResult> GetCommunityDetails(int community_id)
     {
         var community = await _context.Community
-            .Include(c => c.tags)
-            .Include(c => c.Posts)
-            .FirstOrDefaultAsync(c => c.Id == community_id);
+            .Include(c => c.Tags)
+            .Include(c => c.PostID)
+            .FirstOrDefaultAsync(c => c.CommunityID == community_id);
 
         if (community == null)
         {
@@ -47,13 +49,13 @@ public class CommunityController : ControllerBase
 
         var response = new
         {
-            id = community.Id,
+            id = community.CommunityID,
             name = community.Name,
             description = community.Description,
-            img_path = community.img_path,
-            member_count = community.member_count,
-            tags = community.tags.Select(t => t.Id),
-            post_ids = community.Posts.Select(p => p.Id)
+            Img_path = community.Img_path,
+            MemberCount = community.MemberCount,
+            Tags = community.Tags.Select(t => t.CommunityID),
+            post_ids = community.PostID.Select(p => p.CommunityID)
         };
 
         return Ok(response);
@@ -70,42 +72,43 @@ public class CommunityController : ControllerBase
         }
 
         community.Description = update.Description;
-        community.img_path = update.img_path;
+        community.Img_path = update.Img_path;
 
         await _context.SaveChangesAsync();
         return Ok();
     }
 
+    //TODO: fix this its not a list but a comma seperated string
     // 4.3.4 Update community (backend)
     [HttpPut("update/backend/{community_id}")]
-    public async Task<ActionResult> UpdateCommunityBackend(int community_id, [FromBody] BackendUpdateDto update)
+    public async Task<ActionResult> UpdateCommunityBackend(int community_id, [FromBody] CommunityStructure update)
     {
         var community = await _context.Community
-            .Include(c => c.tags)
-            .Include(c => c.Posts)
-            .FirstOrDefaultAsync(c => c.Id == community_id);
+            .Include(c => c.Tags)
+            .Include(c => c.PostID)
+            .FirstOrDefaultAsync(c => c.CommunityID == community_id);
 
         if (community == null)
         {
             return NotFound();
         }
 
-        community.member_count = update.member_count;
+        community.MemberCount = update.MemberCount;
 
-        community.tags.Clear();
-        foreach (var tagId in update.TAGS)
+        community.Tags.Clear();
+        foreach (var tagCommunityID in update.TAGS)
         {
-            var tag = await _context.Tags.FindAsync(tagId);
+            var tag = await _context.Tags.FindAsync(tagCommunityID);
             if (tag != null)
-                community.tags.Add(tag);
+                community.Tags.Add(tag);
         }
 
-        community.Posts.Clear();
-        foreach (var postId in update.POST_IDs)
+        community.PostID.Clear();
+        foreach (var postCommunityID in update.PostID)
         {
-            var post = await _context.Posts.FindAsync(postId);
+            var post = await _context.PostID.FindAsync(postCommunityID);
             if (post != null)
-                community.Posts.Add(post);
+                community.PostID.Add(post);
         }
 
         await _context.SaveChangesAsync();

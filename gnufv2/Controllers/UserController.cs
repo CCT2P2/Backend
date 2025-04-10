@@ -64,7 +64,7 @@ public class UserController : ControllerBase
 
     // 4.2.3 Update User Profile (user)
     [HttpPut("update/user/{user_id}")]
-    public async Task<ActionResult> UpdateUserProfile(int user_id, [FromBody] UpdateUserDto update)
+    public async Task<ActionResult> UpdateUserProfile(int user_id, [FromBody] UserStructure update)
     {
         var user = await _context.Users.FindAsync(user_id);
         if (user == null)
@@ -72,17 +72,17 @@ public class UserController : ControllerBase
             return NotFound();
         }
 
-        user.ImagePath = update.ImgPath;
+        user.ImagePath = update.ImagePath;
         user.Password = update.Password;
 
         await _context.SaveChangesAsync();
         return Ok();
     }
 
-
+    //TODO: fix this its not a list but a comma seperated string
     // 4.2.4 Update User Profile (backend)
     [HttpPut("update/backend/{user_id}")]
-    public async Task<ActionResult> UpdateUserBackend(int user_id, [FromBody] BackendUserUpdateDto update)
+    public async Task<ActionResult> UpdateUserBackend(int user_id, [FromBody] UserStructure update)
     {
         var user = await _context.Users
             .Include(u => u.PostIds)
@@ -116,7 +116,7 @@ public class UserController : ControllerBase
         }
 
         user.Tags.Clear();
-        foreach (var tagId in update.TagIds)
+        foreach (var tagId in update.Tags)
         {
             var tag = await _context.Tags.FindAsync(tagId);
             if (tag != null)
@@ -129,17 +129,4 @@ public class UserController : ControllerBase
         return Ok();
     }
 
-    // DTOs
-    public class UpdateUserDto
-    {
-        public string ImgPath { get; set; }
-        public string Password { get; set; }
-    }
-
-    public class BackendUserUpdateDto
-    {
-        public List<int> CommunityIds { get; set; } = new();
-        public List<int> PostIds { get; set; } = new();
-        public List<int> TagIds { get; set; } = new();
-    }
 }

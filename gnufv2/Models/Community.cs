@@ -21,7 +21,7 @@ public class CommunityStructure
     public int MemberCount { get; set; } = 0;
 
     [Column("IMG_PATH")]
-    public string? Img { get; set; }
+    public string? Img_path { get; set; }
 
     [Column("TAGS")]
     public string Tags { get; set; } = string.Empty;
