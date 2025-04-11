@@ -137,6 +137,24 @@ namespace Gnuf.Controllers
         [HttpGet("posts")]
         public async Task<ActionResult> GetPosts([FromQuery] PostQueryParameters query)
         {
+            
+            DateTime? timestampStart = null;
+            DateTime? timestampEnd = null;
+
+            try
+            {
+                if (query.TimestampStart.HasValue)
+                    timestampStart = DateTimeOffset.FromUnixTimeSeconds(query.TimestampStart.Value).UtcDateTime;
+
+                if (query.TimestampEnd.HasValue)
+                    timestampEnd = DateTimeOffset.FromUnixTimeSeconds(query.TimestampEnd.Value).UtcDateTime;
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                // return a 400 Bad Request instead of crashing the whole request
+                return BadRequest("Invalid Unix timestamp provided.");
+            }
+            
             var postsQuery = _context.Post.AsQueryable();
 
             if (query.CommunityId.HasValue)
