@@ -34,7 +34,9 @@ namespace Gnuf.Controllers
                 post_ids = user.PostIds,
                 community_ids = user.CommunityIds,
                 tags = user.Tags,
-                admin = user.IsAdmin
+                admin = user.IsAdmin,
+                display_name = user.DisplayName,
+                description = user.Description,
             };
 
             return Ok(result);

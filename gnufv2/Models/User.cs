@@ -42,4 +42,10 @@ public class UserStructure
 
     [Column("TAGS")]
     public string? Tags { get; set; }
+
+    [Column("DISPLAY_NAME")]
+    public string? DisplayName { get; set; }
+
+    [Column("DESCRIPTION")]
+    public string? Description { get; set; }
 }
