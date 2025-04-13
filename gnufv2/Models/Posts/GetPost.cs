@@ -27,4 +27,10 @@ public class GetPostResponse
     
     public string? comments { get; set; } = string.Empty;
     
+    public string? Img { get; set; } = string.Empty;
+    
+    public string? Tags { get; set; } = string.Empty;
+    
+    
+    
 }

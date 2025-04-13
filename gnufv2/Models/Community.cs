@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Gnuf.Models;
 
 
-[Table("community")]
+[Table("COMMUNITIES")]
 public class CommunityStructure
 {
     [Key]

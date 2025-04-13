@@ -10,7 +10,10 @@
         public int Offset { get; set; } = 0;
         public string SortBy { get; set; } = "timestamp";
         public string SortOrder { get; set; } = "desc";
-        public string Tags { get; set; } // optional, comma-separated
+        
+        public string? Img { get; set; } = string.Empty;
+    
+        public string? Tags { get; set; } = string.Empty;
     }
 
     public class GetPostsResponse

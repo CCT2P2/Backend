@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Gnuf.Models;
 
-[Table("Post")]
+[Table("POSTS")]
 
 public class PostStructure
 {
@@ -49,6 +49,9 @@ public class PostStructure
 
     [Column("IMG_PATH")]
     public string? Img { get; set; }
+    
+    [Column("TAGS")]
+    public string? Tags { get; set; } 
     
 }
 
