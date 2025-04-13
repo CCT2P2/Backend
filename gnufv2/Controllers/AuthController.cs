@@ -32,7 +32,7 @@ public class AuthController : ControllerBase
         {
             Email = request.Email,
             Username = request.Username,
-            Password = request.Password // TODO: Hash this!
+            Password = BCrypt.Net.BCrypt.HashPassword(request.Password, workFactor: 12)
         };
 
         _context.Users.Add(user);
@@ -47,7 +47,7 @@ public class AuthController : ControllerBase
         var user = await _context.Users
             .FirstOrDefaultAsync(u => u.Username == request.Username);
 
-        if (user == null || user.Password != request.Password) // TODO: Use hash check
+        if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
             return Unauthorized("Invalid credentials");
 
         return Ok(new { user.UserId, user.Username });
