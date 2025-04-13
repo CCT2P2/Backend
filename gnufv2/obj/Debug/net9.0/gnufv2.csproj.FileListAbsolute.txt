@@ -1196,3 +1196,5 @@ E:\Programming\Uni Projects\Gnuf\Backend\gnufv2\obj\Debug\net9.0\gnufv2.pdb
 E:\Programming\Uni Projects\Gnuf\Backend\gnufv2\obj\Debug\net9.0\gnufv2.genruntimeconfig.cache
 E:\Programming\Uni Projects\Gnuf\Backend\gnufv2\obj\Debug\net9.0\ref\gnufv2.dll
 >>>>>>> origin/main
+E:\Programming\Uni Projects\Gnuf\Backend\gnufv2\bin\Debug\net9.0\Konscious.Security.Cryptography.Blake2.dll
+E:\Programming\Uni Projects\Gnuf\Backend\gnufv2\bin\Debug\net9.0\Konscious.Security.Cryptography.Argon2.dll
