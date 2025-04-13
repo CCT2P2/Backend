@@ -27,6 +27,10 @@ public class UserStructure
     [MaxLength(1000)]
     public string Password { get; set; } = string.Empty;
 
+    [Required]
+    [Column("SALT")]
+    public string Salt { get; set; } = string.Empty;
+
     [Column("IMG_PATH")]
     public string? ImagePath { get; set; }
 
