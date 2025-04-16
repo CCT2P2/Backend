@@ -85,6 +85,7 @@ public class AuthController : ControllerBase
             return Unauthorized("Invalid credentials");
 
         var salt = Convert.FromBase64String(user.Salt ?? "");
+        var token = _tok
 
         if (!await VerifyPasswordAsync(request.Password, salt, user.Password))
             return Unauthorized("Invalid credentials");
