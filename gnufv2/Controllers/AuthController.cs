@@ -82,12 +82,16 @@ public class AuthController : ControllerBase
             .FirstOrDefaultAsync(u => u.Username == request.Username);
 
         if (user == null)
+        {
             return Unauthorized("Invalid credentials");
+        }
 
         var salt = Convert.FromBase64String(user.Salt ?? "");
 
         if (!await VerifyPasswordAsync(request.Password, salt, user.Password))
+        {
             return Unauthorized("Invalid credentials");
+        }
 
         return Ok(new { user.UserId, user.Username });
     }
