@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Konscious.Security.Cryptography;
 using System.Security.Cryptography;
 using System.Text;
+using gnufv2.Interfaces;
 
 namespace Gnuf.Controllers;
 
@@ -15,10 +16,12 @@ namespace Gnuf.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly GnufContext _context;
+    private readonly ITokenService _tokenService;
 
-    public AuthController(GnufContext context)
+    public AuthController(GnufContext context, ITokenService tokenService)
     {
         _context = context;
+        _tokenService = tokenService;
     }
 
     // Helper: Generate random salt
@@ -85,11 +88,11 @@ public class AuthController : ControllerBase
             return Unauthorized("Invalid credentials");
 
         var salt = Convert.FromBase64String(user.Salt ?? "");
-        var token = _tok
+        var token = _tokenService.GenerateJwtToken(user);
 
         if (!await VerifyPasswordAsync(request.Password, salt, user.Password))
             return Unauthorized("Invalid credentials");
 
-        return Ok(new { user.UserId, user.Username });
+        return Ok(new { user.UserId, user.Username, token });
     }
 }
