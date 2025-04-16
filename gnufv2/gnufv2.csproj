@@ -24,4 +24,8 @@
     <PackageReference Include="Konscious.Security.Cryptography.Blake2" Version="1.1.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\upload img test\" />
+  </ItemGroup>
+
 </Project>
