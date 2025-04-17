@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\upload img test\" />
+    <Folder Include="Controllers\test\" />
   </ItemGroup>
 
 </Project>

@@ -104,7 +104,7 @@ namespace Gnuf.Controllers
             {
                 return NotFound();
             }
-
+            // delete all posts in the community or move to id -1
             _context.Community.Remove(community);
             await _context.SaveChangesAsync();
             return Ok();

@@ -9,7 +9,8 @@ namespace Gnuf.Controllers
     public class MiscController : ControllerBase
     {
         
-        string pathToSave = "/home/slindau/image/";
+        //string pathToSave = "/home/slindau/image/";
+        string pathToSave = "C:\\Users\\burhe\\RiderProjects\\p2\\Backend\\gnufv2\\Controllers\\test";
         
         [HttpPost("upload/image")]
         public IActionResult Upload()
