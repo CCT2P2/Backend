@@ -2,12 +2,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Gnuf.Models;
 using System.Linq;
+using System.Security.Claims;
 using Gnuf.Models.Posts;
+using gnufv2.Extensions;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Gnuf.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class PostController : ControllerBase
     {
         private readonly GnufContext _context;
@@ -21,6 +27,12 @@ namespace Gnuf.Controllers
         [HttpPost("create")]
         public async Task<ActionResult> CreatePost([FromBody] PostStructure post)
         {
+            // checks if the user id in the token claims it matches the auth_id in the request
+            if (!User.MatchesId(post.auth_id.ToString()))
+            {
+                return Unauthorized();
+            }
+
             var newPost = new PostStructure
             {
                 Title = post.Title,
@@ -84,6 +96,12 @@ namespace Gnuf.Controllers
                 return NotFound();
             }
 
+            // checks if user id matches the auth_id in the request. If the user is an admin they can edit anyway
+            if (!User.MatchesId(post.auth_id.ToString()) && !User.IsInRole("Admin"))
+            {
+                return Unauthorized();
+            }
+
             post.Title = update.Title;
             post.MainText = update.MainText;
 
@@ -124,14 +142,16 @@ namespace Gnuf.Controllers
                 return NotFound();
             }
 
+            // checks if user id matches the auth_id in the request. If the user is an admin they can delete anyway
+            if (!User.MatchesId(post.auth_id.ToString()) && !User.IsInRole("Admin"))
+            {
+                return Unauthorized();
+            }
+
             _context.Post.Remove(post);
             await _context.SaveChangesAsync();
             return Ok();
         }
-        
-        
-        
-        
         
         //4.4.6 Get Multiple Posts
         [HttpGet("posts")]
