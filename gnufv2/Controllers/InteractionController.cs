@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Gnuf.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Gnuf.Controllers
 {
     [ApiController]
     [Route("api/post")]
+    [Authorize]
     public class PostInteractionsController : ControllerBase
     {
         private readonly GnufContext _context;

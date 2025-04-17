@@ -1,12 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Gnuf.Models;
 using Gnuf.Models.Community;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace Gnuf.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class CommunityController : ControllerBase
     {
         private readonly GnufContext _context;
@@ -20,6 +22,12 @@ namespace Gnuf.Controllers
         [HttpPost("create")]
         public async Task<ActionResult> CreateCommunity([FromBody] CommunityStructure community)
         {
+            // Only admins can create communities
+            if (!User.IsInRole("Admin"))
+            {
+                return Unauthorized();
+            }
+
             if (_context.Community.Any(c => c.Name == community.Name))
             {
                 return BadRequest("Community already exists");
@@ -60,6 +68,12 @@ namespace Gnuf.Controllers
         [HttpPut("update/details/{community_id}")]
         public async Task<ActionResult> UpdateCommunityUser(int community_id, [FromBody] CommunityStructure update)
         {
+            // Only admins can update communities
+            if (!User.IsInRole("Admin"))
+            {
+                return Unauthorized();
+            }
+
             var community = await _context.Community.FindAsync(community_id);
             if (community == null)
             {
@@ -77,6 +91,12 @@ namespace Gnuf.Controllers
         [HttpPut("update/backend/{community_id}")]
         public async Task<ActionResult> UpdateCommunityBackend(int community_id, [FromBody] CommunityStructure update)
         {
+            // Only admins can update communities
+            if (!User.IsInRole("Admin"))
+            {
+                return Unauthorized();
+            }
+
             var community = await _context.Community.FindAsync(community_id);
             if (community == null)
             {
@@ -99,6 +119,12 @@ namespace Gnuf.Controllers
         [HttpDelete("remove/{community_id}")]
         public async Task<ActionResult> DeleteCommunity(int community_id)
         {
+            // Only admins can delete communities
+            if (!User.IsInRole("Admin"))
+            {
+                return Unauthorized();
+            }
+
             var community = await _context.Community.FindAsync(community_id);
             if (community == null)
             {
