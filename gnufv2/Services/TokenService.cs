@@ -30,12 +30,14 @@ public class TokenService : ITokenService
             new(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
             new(JwtRegisteredClaimNames.Name, user.Username),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new(ClaimTypes.Role, user.IsAdmin == 1 ? "Admin" : "User")
+            new(ClaimTypes.Role, user.IsAdmin == 1 ? "Admin" : "User"),
+            new(JwtRegisteredClaimNames.Email, user.Email),
+            new("imagePath", user.ImagePath ?? "")
         };
 
         // token signing stuff. the server checks this signature later to know that the token is authentic
         var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(jwtKey ?? throw new InvalidOperationException("JWT Key is not configured")));
+            Encoding.UTF8.GetBytes(jwtKey ?? throw new InvalidOperationException("JWT Key is not configured 1")));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         // puts all the things together into the jwt token

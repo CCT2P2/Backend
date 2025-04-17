@@ -8,6 +8,8 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
+Console.WriteLine($"Running in {builder.Environment.EnvironmentName} mode");
+
 // Use SQLite DB file
 builder.Services.AddDbContext<GnufContext>(options =>
     options.UseSqlite("Data Source=database/GNUF.sqlite"));
@@ -34,7 +36,7 @@ builder.Services.AddAuthentication(options =>
             // this part isnt in the docs linked, its basically just verifies the signature of the token so the server knows its authentic
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ??
-                                       throw new InvalidOperationException("JWT Key is not configured")))
+                                       throw new InvalidOperationException("JWT Key is not configured 2")))
         };
     });
 

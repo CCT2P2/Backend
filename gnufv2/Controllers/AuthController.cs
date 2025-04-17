@@ -93,6 +93,6 @@ public class AuthController : ControllerBase
         if (!await VerifyPasswordAsync(request.Password, salt, user.Password))
             return Unauthorized("Invalid credentials");
 
-        return Ok(new { user.UserId, user.Username, token });
+        return Ok(new { user.UserId, user.Username, user.Email, user.ImagePath, token });
     }
 }
