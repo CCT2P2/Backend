@@ -159,6 +159,6 @@ public class AuthController : ControllerBase
 
         SetRefreshToken(newRefreshToken);
 
-        return Ok(new { accessToken = newRefreshToken });
+        return Ok(new { accessToken = newAccessToken });
     }
 }
