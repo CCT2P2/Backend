@@ -2,12 +2,14 @@
 // Controllers/FeedbackController.cs
 using Microsoft.AspNetCore.Mvc;
 using Gnuf.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace Gnuf.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class FeedbackController : ControllerBase
 {
     private readonly GnufContext _context;
