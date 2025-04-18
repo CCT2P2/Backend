@@ -46,7 +46,6 @@ public class PostStructure
     [Column("COMMENTS")]
     public string? comments { get; set; } = string.Empty;
 
-
     [Column("IMG_PATH")]
     public string? Img { get; set; }
     
