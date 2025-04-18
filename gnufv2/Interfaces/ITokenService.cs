@@ -5,7 +5,7 @@ namespace gnufv2.Interfaces;
 
 public interface ITokenService
 {
-    string GenerateJwtToken(UserStructure user);
-    string GenerateRefreshToken();
-    ClaimsPrincipal ValidateExpiredToken(string token);
+    string GenerateJwtAccessToken(UserStructure user);
+    ClaimsPrincipal ValidateJwtToken(string token, bool isRefreshToken);
+    string GenerateJwtRefreshToken(UserStructure user);
 }

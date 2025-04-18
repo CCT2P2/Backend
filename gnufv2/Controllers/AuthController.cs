@@ -1,13 +1,14 @@
-
 // Controllers/AuthController.cs
-using Microsoft.AspNetCore.Mvc;
-using Gnuf.Models;
-using Gnuf.Models.Auth;
-using Microsoft.EntityFrameworkCore;
-using Konscious.Security.Cryptography;
+
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Gnuf.Models;
+using Gnuf.Models.Auth;
 using gnufv2.Interfaces;
+using Konscious.Security.Cryptography;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Gnuf.Controllers;
 
@@ -15,13 +16,15 @@ namespace Gnuf.Controllers;
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
+    private readonly IConfiguration _configuration;
     private readonly GnufContext _context;
     private readonly ITokenService _tokenService;
 
-    public AuthController(GnufContext context, ITokenService tokenService)
+    public AuthController(GnufContext context, ITokenService tokenService, IConfiguration configuration)
     {
         _context = context;
         _tokenService = tokenService;
+        _configuration = configuration;
     }
 
     // Helper: Generate random salt
@@ -40,7 +43,7 @@ public class AuthController : ControllerBase
         {
             Salt = salt,
             DegreeOfParallelism = 4, // threads
-            MemorySize = 65536,      // 64 MB
+            MemorySize = 65536, // 64 MB
             Iterations = 4
         };
 
@@ -53,6 +56,21 @@ public class AuthController : ControllerBase
     {
         var computedHash = await HashPasswordAsync(password, salt);
         return storedHash == computedHash;
+    }
+
+    // Helper: Sets a refresh token in cookies
+    private void SetRefreshToken(string refreshToken)
+    {
+        var options = new CookieOptions
+        {
+            HttpOnly = true,
+            Expires = DateTime.UtcNow.AddDays(int.Parse(_configuration["RefreshToken:ExpireDays"] ?? "7")),
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            Path = "/api/auth"
+        };
+
+        Response.Cookies.Append("refreshToken", refreshToken, options);
     }
 
     [HttpPost("register")]
@@ -84,19 +102,63 @@ public class AuthController : ControllerBase
         var user = await _context.Users
             .FirstOrDefaultAsync(u => u.Username == request.Username);
 
-        if (user == null)
-        {
-            return Unauthorized("Invalid credentials");
-        }
+        if (user == null) return Unauthorized("Invalid credentials");
 
         var salt = Convert.FromBase64String(user.Salt ?? "");
-        var token = _tokenService.GenerateJwtToken(user);
 
         if (!await VerifyPasswordAsync(request.Password, salt, user.Password))
-        {
             return Unauthorized("Invalid credentials");
+
+        var accessToken = _tokenService.GenerateJwtAccessToken(user);
+        var refreshToken = _tokenService.GenerateJwtRefreshToken(user);
+
+        SetRefreshToken(refreshToken);
+
+        return Ok(new { user.UserId, user.Username, user.Email, user.ImagePath, accessToken });
+    }
+
+    [HttpPost("refresh")]
+    public async Task<IActionResult> Refresh()
+    {
+        var refreshToken = Request.Cookies["refreshToken"];
+        var accessToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+        // check if there even is a token
+        if (string.IsNullOrWhiteSpace(accessToken) || string.IsNullOrWhiteSpace(refreshToken))
+            return BadRequest("Both access token and refresh token are required");
+
+        // check if access tokens is authentic. if so store claims in principal
+        ClaimsPrincipal accessTokenPrincipal;
+        ClaimsPrincipal refreshTokenPrincipal;
+        try
+        {
+            accessTokenPrincipal = _tokenService.ValidateJwtToken(accessToken, false);
+            refreshTokenPrincipal = _tokenService.ValidateJwtToken(accessToken, true);
+        }
+        catch
+        {
+            return Unauthorized("Invalid token(s)");
         }
 
-        return Ok(new { user.UserId, user.Username, user.Email, user.ImagePath, token });
+        // gets user id claim from both, and checks if they are identical.
+        // then see if it can get parsed as an int, and store the user id if it succeeds
+        var accessTokenUserId = accessTokenPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var refreshTokenUserId = refreshTokenPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (accessTokenUserId != refreshTokenUserId || !int.TryParse(accessTokenUserId, out var userId))
+            return Unauthorized("Token mismatch or invalid user id");
+
+
+        var user = await _context.Users.FirstOrDefaultAsync(user =>
+            user.UserId == userId);
+
+        if (user == null) return Unauthorized("User not found");
+
+        var newAccessToken = _tokenService.GenerateJwtAccessToken(user);
+        var newRefreshToken = _tokenService.GenerateJwtRefreshToken(user);
+
+        SetRefreshToken(newRefreshToken);
+
+        return Ok(new { accessToken = newRefreshToken });
     }
 }

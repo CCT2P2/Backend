@@ -1,6 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 using Gnuf.Models;
 using gnufv2.Interfaces;
@@ -18,12 +17,12 @@ public class TokenService : ITokenService
     }
 
     /// <summary>
-    /// Generates a new jwt token based on the configurations
+    ///     Generates a new jwt token based on the configurations
     /// </summary>
     /// <param name="user">The user to create the token for. Is used to set claims about the user</param>
     /// <returns>The generated jwt token (no way)</returns>
     /// <exception cref="InvalidOperationException">If this happens you messed up storing the key in user-secrets</exception>
-    public string GenerateJwtToken(UserStructure user)
+    public string GenerateJwtAccessToken(UserStructure user)
     {
         // get settings from configuration (appsettings.json and user-secrets)
         var jwtKey = _configuration["Jwt:Key"];
@@ -44,7 +43,7 @@ public class TokenService : ITokenService
 
         // token signing stuff. the server checks this signature later to know that the token is authentic
         var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(jwtKey ?? throw new InvalidOperationException("JWT Key is not configured 1")));
+            Encoding.UTF8.GetBytes(jwtKey ?? throw new InvalidOperationException("JWT Key is not configured")));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         // puts all the things together into the jwt token
@@ -60,56 +59,86 @@ public class TokenService : ITokenService
     }
 
     /// <summary>
-    /// It literally just makes a random string
-    /// </summary>
-    /// <returns>A random string</returns>
-    public string GenerateRefreshToken()
-    {
-        var randomBytes = new byte[64];
-        var rng = RandomNumberGenerator.Create();
-        rng.GetBytes(randomBytes);
-        return Convert.ToBase64String(randomBytes);
-    }
-
-    /// <summary>
-    /// Validates if an expired token is actually authentic based on the same configurations used by GenerateJwtToken. Kills the user if it isnt (throws an exception)
+    ///     Validates if an expired token is actually authentic based on the same configurations used by GenerateJwtToken.
+    ///     Kills the user if it isnt (throws an exception)
     /// </summary>
     /// <param name="token">The token to validate</param>
+    /// <param name="validateLifetime">
+    ///     Whether to validate lifetime or not. For access tokens we dont want to cus they get
+    ///     refreshed anyway
+    /// </param>
     /// <returns>A ClaimsPrincipal containing the claims from the token. Used to make a new token with same claims</returns>
     /// <exception cref="InvalidOperationException">If this happens you messed up storing the key in user-secrets</exception>
-    /// <exception cref="SecurityTokenException">Invalid token, this is intended to happen if someone submits a fake key, otherwise something went wrong with the config</exception>
-    public ClaimsPrincipal ValidateExpiredToken(string token)
+    /// <exception cref="SecurityTokenException">
+    ///     Invalid token, this is intended to happen if someone submits a fake key,
+    ///     otherwise something went wrong with the config
+    /// </exception>
+    public ClaimsPrincipal ValidateJwtToken(string token, bool validateLifetime)
     {
         var jwtKey = _configuration["Jwt:Key"];
         var jwtIssuer = _configuration["Jwt:Issuer"];
         var jwtAudience = _configuration["Jwt:Audience"];
 
         // create parameters based on the same configs as the tokens are created with (except for lifetime as thats different from each token)
-        var tokenValidationParameters = new TokenValidationParameters()
+        var tokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
             ValidateAudience = true,
-            ValidateLifetime = false,
+            ValidateLifetime = validateLifetime, // dont care for access tokens cus we are gonna refresh it anyway
             ValidateIssuerSigningKey = true,
             ValidIssuer = jwtIssuer,
             ValidAudience = jwtAudience,
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(jwtKey ?? throw new InvalidOperationException("JWT Key is not configured 3"))),
+                Encoding.UTF8.GetBytes(jwtKey ?? throw new InvalidOperationException("JWT Key is not configured")))
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();
 
         // validates that the token matches the validation parameters. automatically throws an exception if it isnt valid
         // principal is the ClaimsPrincipal containing the claims from the token. We can use this to generate the new token
-        var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken); // tfw C# cant return multiple values, more reason why Go is superior
+        var principal =
+            tokenHandler.ValidateToken(token, tokenValidationParameters,
+                out var securityToken); // tfw C# cant return multiple values, more reason why Go is superior
 
         if (securityToken is not JwtSecurityToken jwtSecurityToken
             || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
                 StringComparison.InvariantCultureIgnoreCase))
-        {
             throw new SecurityTokenException("Invalid token");
-        }
 
         return principal;
+    }
+
+    /// <summary>
+    ///     Generates a jwt refresh token
+    /// </summary>
+    /// <param name="user">The user to create the token for. Used for user id</param>
+    /// <returns></returns>
+    /// <exception cref="InvalidOperationException">If this happens you messed up storing the key in user-secrets</exception>
+    public string GenerateJwtRefreshToken(UserStructure user)
+    {
+        var jwtKey = _configuration["Jwt:Key"];
+        var jwtIssuer = _configuration["Jwt:Issuer"];
+        var jwtAudience = _configuration["Jwt:Audience"];
+        var jwtExpireDays = int.Parse(_configuration["RefreshToken:ExpireDays"] ?? "7");
+
+        var claims = new List<Claim>
+        {
+            new(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        };
+
+        var key = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(jwtKey ?? throw new InvalidOperationException("JWT Key is not configured")));
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        var token = new JwtSecurityToken(
+            jwtIssuer,
+            jwtAudience,
+            claims,
+            expires: DateTime.Now.AddDays(jwtExpireDays),
+            signingCredentials: creds
+        );
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }
