@@ -52,4 +52,10 @@ public class UserStructure
 
     [Column("DESCRIPTION")]
     public string? Description { get; set; }
+
+    [Column("LIKE_ID")]
+    public string? LikeId { get; set; }
+
+    [Column("DISLIKE_ID")]
+    public string? DislikeId { get; set; }
 }

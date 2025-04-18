@@ -9,7 +9,6 @@ namespace Gnuf.Models
 
         public DbSet<UserStructure> Users { get; set; } = null!;
         public DbSet<PostStructure> Post { get; set; } = null!;
-        public DbSet<InteractionStructure> Interaction { get; set; } = null!;
         public DbSet<CommunityStructure> Community { get; set; } = null!;
         public DbSet<FeedbackStructure> Feedback { get; set; } = null!;
 

@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Gnuf.Models;
 using Microsoft.AspNetCore.Authorization;
-using Gnuf.Models.Interactions;
 
 namespace Gnuf.Controllers
 {
@@ -20,29 +19,25 @@ namespace Gnuf.Controllers
 
         // 4.5.1 Like / Dislike
 
-        // Controller action
         [HttpPut("vote/{post_id}")]
-        public async Task<ActionResult> VoteOnPost(int post_id, [FromBody] VoteRequest vote)
+        public async Task<ActionResult> VoteOnPost(int post_id, [FromBody] Gnuf.Models.Interactions.VoteRequest vote)
         {
             var user_id = vote.UserID;
             var voteType = vote.VoteType.ToLower();
 
-            // Load the user interaction structure
-            var interaction = await _context.Interaction.FirstOrDefaultAsync(x => x.UserId == user_id);
+            var interaction = await _context.Users.FirstOrDefaultAsync(x => x.UserId == user_id);
 
             if (interaction == null)
             {
                 return NotFound("User not found.");
             }
 
-            // Load the post
             var post = await _context.Post.FirstOrDefaultAsync(x => x.PostID == post_id);
             if (post == null)
             {
                 return NotFound("Post not found.");
             }
 
-            // Safety null checks
             interaction.LikeId ??= "";
             interaction.DislikeId ??= "";
 
@@ -97,7 +92,6 @@ namespace Gnuf.Controllers
                 return BadRequest("Invalid vote type.");
             }
 
-            // Safety to not go below 0
             post.likes = Math.Max(0, post.likes);
             post.dislikes = Math.Max(0, post.dislikes);
 
