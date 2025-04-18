@@ -121,7 +121,7 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Refresh()
     {
         var refreshToken = Request.Cookies["refreshToken"];
-        var accessToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+        var accessToken = Request.Headers.Authorization.ToString().Replace("Bearer ", "");
 
         // check if there even is a token
         if (string.IsNullOrWhiteSpace(accessToken) || string.IsNullOrWhiteSpace(refreshToken))
