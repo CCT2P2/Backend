@@ -910,5 +910,5 @@ E:/Programming/Uni Projects/Gnuf/Backend/gnufv2/bin/Debug/net9.0/Konscious.Secur
 C:/Users/burhe/RiderProjects/p2/Backend/gnufv2/bin/Debug/net9.0/publish/web.config
 C:/Users/burhe/RiderProjects/p2/Backend/gnufv2/bin/Debug/net9.0/Konscious.Security.Cryptography.Argon2.dll
 C:/Users/burhe/RiderProjects/p2/Backend/gnufv2/bin/Debug/net9.0/Konscious.Security.Cryptography.Blake2.dll
-=======
 >>>>>>> Stashed changes
+/home/slindau/Documents/P2/Backend/gnufv2/bin/Debug/net9.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll

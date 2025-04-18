@@ -1,4 +1,4 @@
-namespace Gnuf.Models.Posts
+namespace Gnuf.Models.Interactions
 {
     public class CommentRequest
     {

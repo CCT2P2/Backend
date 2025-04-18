@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Gnuf.Models;
+using Gnuf.Models.Interactions;
 
 namespace Gnuf.Controllers
 {
@@ -16,21 +17,92 @@ namespace Gnuf.Controllers
         }
 
         // 4.5.1 Like / Dislike
+
+        // Controller action
         [HttpPut("vote/{post_id}")]
-        public async Task<ActionResult> VoteOnPost(int post_id, [FromBody] PostStructure vote)
+        public async Task<ActionResult> VoteOnPost(int post_id, [FromBody] VoteRequest vote)
         {
-            var post = await _context.Post.FindAsync(post_id);
-            if (post == null)
+            var user_id = vote.UserID;
+            var voteType = vote.VoteType.ToLower();
+
+            // Load the user interaction structure
+            var interaction = await _context.Interaction.FirstOrDefaultAsync(x => x.UserId == user_id);
+
+            if (interaction == null)
             {
-                return NotFound();
+                return NotFound("User not found.");
             }
 
-            post.likes = vote.likes;
-            post.dislikes = vote.dislikes;
+            // Load the post
+            var post = await _context.Post.FirstOrDefaultAsync(x => x.PostID == post_id);
+            if (post == null)
+            {
+                return NotFound("Post not found.");
+            }
+
+            // Safety null checks
+            interaction.LikeId ??= "";
+            interaction.DislikeId ??= "";
+
+            bool alreadyLiked = interaction.LikeId.Contains($"{post_id},");
+            bool alreadyDisliked = interaction.DislikeId.Contains($"{post_id},");
+
+            if (voteType == "none")
+            {
+                if (alreadyLiked)
+                {
+                    post.likes--;
+                    interaction.LikeId = interaction.LikeId.Replace($"{post_id},", "");
+                }
+                else if (alreadyDisliked)
+                {
+                    post.dislikes--;
+                    interaction.DislikeId = interaction.DislikeId.Replace($"{post_id},", "");
+                }
+            }
+            else if (voteType == "like")
+            {
+                if (!alreadyLiked)
+                {
+                    post.likes++;
+
+                    if (alreadyDisliked)
+                    {
+                        post.dislikes--;
+                        interaction.DislikeId = interaction.DislikeId.Replace($"{post_id},", "");
+                    }
+
+                    interaction.LikeId += $"{post_id},";
+                }
+            }
+            else if (voteType == "dislike")
+            {
+                if (!alreadyDisliked)
+                {
+                    post.dislikes++;
+
+                    if (alreadyLiked)
+                    {
+                        post.likes--;
+                        interaction.LikeId = interaction.LikeId.Replace($"{post_id},", "");
+                    }
+
+                    interaction.DislikeId += $"{post_id},";
+                }
+            }
+            else
+            {
+                return BadRequest("Invalid vote type.");
+            }
+
+            // Safety to not go below 0
+            post.likes = Math.Max(0, post.likes);
+            post.dislikes = Math.Max(0, post.dislikes);
 
             await _context.SaveChangesAsync();
             return Ok();
         }
+
 
         // 4.5.2 Add comments (CSV-based)
         [HttpPut("comments/{post_id}")]
