@@ -134,6 +134,23 @@ namespace Gnuf.Controllers
             _context.Community.Remove(community);
             await _context.SaveChangesAsync();
             return Ok();
+
+
+        }
+        // 4.3.6 Get all communities
+        [HttpGet("all")]
+        public async Task<ActionResult<List<GetAllCommunitiesResponse>>> GetAllCommunities()
+        {
+            var communities = await _context.Community.ToListAsync();
+
+            var response = communities.Select(c => new GetAllCommunitiesResponse
+            {
+                Names = c.Name,
+                CommunityID = c.CommunityID,
+                Description = c.Description
+            }).ToList();
+
+            return response;
         }
     }
 }
