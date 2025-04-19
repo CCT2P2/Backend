@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("gnuf")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+936f260625c3904140ff5ef86504309ea2c1a833")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ae8397ec0d9b00692f4858f0a35c1a13c2a50271")]
 [assembly: System.Reflection.AssemblyProductAttribute("gnuf")]
 [assembly: System.Reflection.AssemblyTitleAttribute("gnuf")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
