@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Gnuf.Models;
 
@@ -27,7 +27,7 @@ namespace Gnuf.Controllers
             {
                 
                 Guid myuuid = Guid.NewGuid();
-                string FileName = myuuid.ToString() + ".png";
+                string FileName = myuuid.ToString() + Path.GetExtension(file.FileName);
                 
                 string fullPath = Path.Combine(pathToSave, FileName);            
                 using FileStream stream = new(fullPath, FileMode.Create);     

@@ -4,6 +4,6 @@ public class UploadImg
 {
     public class UploadImgResponse
     {
-        public string Image_path { get; set; }
+        public string files { get; set; }
     }
 }
