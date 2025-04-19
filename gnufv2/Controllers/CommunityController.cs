@@ -65,7 +65,7 @@ namespace Gnuf.Controllers
         }
 
         // 4.3.3 Update community (user)
-        [HttpPut("update/details/{community_id}")]
+        [HttpPut("update/details/{community_id}")] //now there's no fecking errors, but also no fecking update, so 🤷
         public async Task<ActionResult> UpdateCommunityUser(int community_id, [FromBody] CommunityStructure update)
         {
             // Only admins can update communities
@@ -79,7 +79,7 @@ namespace Gnuf.Controllers
             {
                 return NotFound();
             }
-
+            community.Name = update.Name;
             community.Description = update.Description;
             community.Img_path = update.Img_path;
 
@@ -88,32 +88,10 @@ namespace Gnuf.Controllers
         }
 
         // 4.3.4 Update community (backend)
-        [HttpPut("update/backend/{community_id}")]
-        public async Task<ActionResult> UpdateCommunityBackend(int community_id, [FromBody] CommunityStructure update)
-        {
-            // Only admins can update communities
-            if (!User.IsInRole("Admin"))
-            {
-                return Unauthorized();
-            }
 
-            var community = await _context.Community.FindAsync(community_id);
-            if (community == null)
-            {
-                return NotFound();
-            }
 
-            community.MemberCount = update.MemberCount;
+        //todo
 
-            // Update Tags (CSV string)
-            community.Tags = update.Tags ?? "";
-
-            // Update PostIDs (CSV string)
-            community.PostID = update.PostID ?? "";
-
-            await _context.SaveChangesAsync();
-            return Ok();
-        }
 
         // 4.3.5 Delete community
         [HttpDelete("remove/{community_id}")]
