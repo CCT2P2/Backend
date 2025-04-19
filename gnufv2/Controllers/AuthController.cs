@@ -114,7 +114,7 @@ public class AuthController : ControllerBase
 
         SetRefreshToken(refreshToken);
 
-        return Ok(new { user.UserId, user.Username, user.Email, user.ImagePath, accessToken });
+        return Ok(new { user.UserId, user.Username, user.Email, user.ImagePath, user.IsAdmin, accessToken });
     }
 
     [HttpPost("refresh")]
