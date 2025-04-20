@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("gnufv2")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6f34b646f0511c1aa08433ba43385d2b59c4293c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ebc6be06a9fb6eff5a5d75976933a35da5005780")]
 [assembly: System.Reflection.AssemblyProductAttribute("gnufv2")]
 [assembly: System.Reflection.AssemblyTitleAttribute("gnufv2")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
