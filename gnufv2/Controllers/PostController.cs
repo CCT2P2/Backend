@@ -235,6 +235,44 @@ namespace Gnuf.Controllers
                 next_offset = offset + posts.Count
             });
         }
+        
+        [HttpGet("postsids")]
+        public async Task<ActionResult> GetPostsByIds([FromQuery] string ids)
+        {
+            if (string.IsNullOrWhiteSpace(ids))
+                return BadRequest("No post IDs provided.");
+
+            var postIdList = ids
+                .Split(',')
+                .Select(idStr => int.TryParse(idStr.Trim(), out var id) ? id : (int?)null)
+                .Where(id => id.HasValue)
+                .Select(id => id.Value)
+                .ToList();
+
+            if (!postIdList.Any())
+                return BadRequest("Invalid post IDs.");
+
+            var posts = await _context.Post
+                .Where(p => postIdList.Contains(p.PostID))
+                .Select(p => new
+                {
+                    post_id = p.PostID,
+                    title = p.Title,
+                    main_text = p.MainText,
+                    auth_id = p.auth_id,
+                    com_id = p.com_id,
+                    timestamp = ((DateTimeOffset)p.timestamp).ToUnixTimeSeconds(),
+                    likes = p.likes,
+                    dislikes = p.dislikes,
+                    post_id_ref = p.post_id_ref,
+                    comment_flag = p.comment_flag,
+                    comment_count = p.comment_Count
+                })
+                .ToListAsync();
+
+            return Ok(posts);
+        }
+
 
     }
 
