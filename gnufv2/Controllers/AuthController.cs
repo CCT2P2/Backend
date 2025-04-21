@@ -133,7 +133,7 @@ public class AuthController : ControllerBase
         try
         {
             accessTokenPrincipal = _tokenService.ValidateJwtToken(accessToken, false);
-            refreshTokenPrincipal = _tokenService.ValidateJwtToken(accessToken, true);
+            refreshTokenPrincipal = _tokenService.ValidateJwtToken(refreshToken, true);
         }
         catch
         {
