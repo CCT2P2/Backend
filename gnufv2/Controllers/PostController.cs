@@ -44,6 +44,24 @@ public class PostController : ControllerBase
         _context.Post.Add(newPost);
         await _context.SaveChangesAsync();
 
+        // this is only for comments
+        if (newPost.comment_flag)
+        {
+            var parentPost = await _context.Post.FindAsync(newPost.post_id_ref);
+            if (parentPost == null)
+            {
+                return NotFound("Parent post not found");
+            }
+
+            parentPost.comments += string.IsNullOrWhiteSpace(parentPost.comments)
+                ? $"{newPost.PostID}"
+                : $",{newPost.PostID}";
+
+            parentPost.comment_Count++;
+        }
+
+        await _context.SaveChangesAsync();
+
         return Ok(new { post_id = newPost.PostID });
     }
 
@@ -172,6 +190,13 @@ public class PostController : ControllerBase
 
         var postsQuery = _context.Post.AsQueryable();
 
+        postsQuery = postsQuery.Where(p => p.comment_flag == query.GetComments || !p.comment_flag == query.GetPosts);
+
+        if (query.ParentPostId.HasValue)
+        {
+            postsQuery = postsQuery.Where(p => p.post_id_ref == query.ParentPostId.Value);
+        }
+
         if (query.CommunityId.HasValue)
             postsQuery = postsQuery.Where(p => p.com_id == query.CommunityId.Value);
 
@@ -205,23 +230,35 @@ public class PostController : ControllerBase
         var offset = Math.Max(query.Offset, 0);
 
         var posts = await postsQuery
+            .Join(
+                _context.Users,  // The other table you want to join with
+                post => post.auth_id,  // Foreign key from posts table
+                author => author.UserId,  // Primary key from authors table
+                (post, author) => new  // Result projection
+                {
+                    // Post properties
+                    post_id = post.PostID,
+                    title = post.Title,
+                    main_text = post.MainText,
+                    post.auth_id,
+                    post.com_id,
+                    post.timestamp,
+                    post.likes,
+                    post.dislikes,
+                    post.post_id_ref,
+                    post.comment_flag,
+                    comment_count = post.comment_Count,
+                    author = new
+                    {
+                        author.Username,
+                        author.ImagePath,
+                        author.IsAdmin,
+                    },
+                })
             .Skip(offset)
             .Take(limit)
-            .Select(p => new
-            {
-                post_id = p.PostID,
-                title = p.Title,
-                main_text = p.MainText,
-                p.auth_id,
-                p.com_id,
-                timestamp = ((DateTimeOffset)p.timestamp).ToUnixTimeSeconds(),
-                p.likes,
-                p.dislikes,
-                p.post_id_ref,
-                p.comment_flag,
-                comment_count = p.comment_Count
-            })
             .ToListAsync();
+
 
         return Ok(new
         {

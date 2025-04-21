@@ -2,6 +2,7 @@
 using Gnuf.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace gnufv2.Migrations
 {
     [DbContext(typeof(GnufContext))]
-    partial class GnufContextModelSnapshot : ModelSnapshot
+    [Migration("20250421142528_fuckingwork")]
+    partial class fuckingwork
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.3");
@@ -121,6 +124,11 @@ namespace gnufv2.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnName("AUTHOR_ID");
 
+                    b.Property<string>("author_name")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("AUTHOR_NAME");
+
                     b.Property<int>("com_id")
                         .HasColumnType("INTEGER")
                         .HasColumnName("COMMUNITY_ID");
@@ -165,10 +173,6 @@ namespace gnufv2.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnName("USER_ID");
 
-                    b.Property<string>("CommentId")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("COMMENT_ID");
-
                     b.Property<string>("CommunityIds")
                         .HasColumnType("TEXT")
                         .HasColumnName("COMMUNITY_IDs");
@@ -179,7 +183,7 @@ namespace gnufv2.Migrations
 
                     b.Property<string>("DislikeId")
                         .HasColumnType("TEXT")
-                        .HasColumnName("DISLIKE_ID");
+                        .HasColumnName("DISLIKE_I");
 
                     b.Property<string>("DisplayName")
                         .HasColumnType("TEXT")

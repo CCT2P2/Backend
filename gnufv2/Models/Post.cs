@@ -20,6 +20,7 @@ public class PostStructure
     [StringLength(100000)]
     public string MainText { get; set; } = string.Empty;
 
+    [ForeignKey("User")]
     [Column("AUTHOR_ID")]
     public int auth_id { get; set; }
 

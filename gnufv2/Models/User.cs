@@ -58,4 +58,7 @@ public class UserStructure
 
     [Column("DISLIKE_ID")]
     public string? DislikeId { get; set; }
+
+    [Column("COMMENT_ID")]
+    public string? CommentId { get; set; }
 }

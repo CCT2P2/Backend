@@ -10,9 +10,12 @@
         public int Offset { get; set; } = 0;
         public string SortBy { get; set; } = "timestamp";
         public string SortOrder { get; set; } = "desc";
-        
+        public bool GetComments { get; set; } = false;
+        public int? ParentPostId { get; set; }
+        public bool GetPosts { get; set; } = true;
+
         public string? Img { get; set; } = string.Empty;
-    
+
         public string? Tags { get; set; } = string.Empty;
     }
 
