@@ -24,6 +24,7 @@ public class PostStructure
     [Column("AUTHOR_ID")]
     public int auth_id { get; set; }
 
+    [ForeignKey("Community")]
     [Column("COMMUNITY_ID")]
     public int com_id { get; set; }
 

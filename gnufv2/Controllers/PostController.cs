@@ -69,50 +69,44 @@ public class PostController : ControllerBase
     [HttpGet("view/{post_id}")]
     public async Task<ActionResult> GetPost(int post_id)
     {
-        var post = await _context.Post
-            .FirstOrDefaultAsync(p => p.PostID == post_id);
+        var matchingPost = await (from post in _context.Post
+            join author in _context.Users on post.auth_id equals author.UserId
+            join community in _context.Community on post.com_id equals community.CommunityID
+            where post.PostID == post_id
+            select new
+            {
+                id = post.PostID,
+                title = post.Title,
+                main_text = post.MainText,
+                post.timestamp,
+                post.likes,
+                post.dislikes,
+                post.post_id_ref,
+                post.comment_flag,
+                post.Img,
+                comment_count = post.comment_Count,
+                // Return comments as CSV string
+                post.comments,
+                author = new
+                {
+                    post.auth_id,
+                    author.Username,
+                    author.ImagePath,
+                    author.IsAdmin,
+                },
+                community = new
+                {
+                    post.com_id,
+                    community.Name,
+                }
+            }).FirstOrDefaultAsync();
 
-        if (post == null) return NotFound();
-
-        // setting up as tasks to fetch in parallel
-        var authorTask = _context.Users
-            .FirstOrDefaultAsync(u => u.UserId == post.auth_id);
-
-        var communityTask = _context.Community
-            .FirstOrDefaultAsync(c => c.CommunityID == post.com_id);
-
-        var author = await authorTask;
-        var community = await communityTask;
-
-        var response = new
+        if (matchingPost == null)
         {
-            id = post.PostID,
-            title = post.Title,
-            main_text = post.MainText,
-            post.timestamp,
-            post.likes,
-            post.dislikes,
-            post.post_id_ref,
-            post.comment_flag,
-            post.Img,
-            comment_count = post.comment_Count,
-            // Return comments as CSV string
-            post.comments,
-            author = new
-            {
-                post.auth_id,
-                author?.Username,
-                author?.ImagePath,
-                author?.IsAdmin,
-            },
-            community = new
-            {
-                post.com_id,
-                community?.Name,
-            }
-        };
+            return NotFound();
+        }
 
-        return Ok(response);
+        return Ok(matchingPost);
     }
 
     // 4.4.3 Update post (user)
@@ -231,10 +225,10 @@ public class PostController : ControllerBase
 
         var posts = await postsQuery
             .Join(
-                _context.Users,  // The other table you want to join with
-                post => post.auth_id,  // Foreign key from posts table
-                author => author.UserId,  // Primary key from authors table
-                (post, author) => new  // Result projection
+                _context.Users,
+                post => post.auth_id,
+                author => author.UserId,
+                (post, author) => new
                 {
                     // Post properties
                     post_id = post.PostID,
