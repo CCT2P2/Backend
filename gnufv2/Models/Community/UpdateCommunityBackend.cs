@@ -1,16 +1,8 @@
 namespace Gnuf.Models.Community;
-
-public class UpdateCommunityBackendRequest
+public class commQueryParameters
 {
-    public int MemberCount { get; set; }
-    public string Tags { get; set; } = string.Empty;
-    public string PostID { get; set; } = string.Empty;
-}
-
-public class UpdateCommunityBackendResponse
-{
-    public int CommunityId { get; set; }
-    public int MemberCount { get; set; }
-    public string Tags { get; set; } = string.Empty;
-    public string PostID { get; set; } = string.Empty;
+    public int Id { get; set; }
+    public int? MemberCount { get; set; }
+    public string? Tags { get; set; }
+    public string? PostID { get; set; }
 }
