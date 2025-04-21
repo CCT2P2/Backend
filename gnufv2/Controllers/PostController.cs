@@ -263,6 +263,7 @@ public class PostController : ControllerBase
                 p.comment_flag,
                 comment_count = p.comment_Count
             })
+            .OrderByDescending(post => post.timestamp)
             .ToListAsync();
 
         return Ok(posts);
