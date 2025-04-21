@@ -19,6 +19,17 @@ public class PostController : ControllerBase
         _context = context;
     }
 
+    // helper function for getting vote state
+    private static string GetVoteState(string postIdString, string likeIdString, string dislikeIdString)
+    {
+        var likeIds = likeIdString?.Split(',') ?? [];
+        var dislikeIds = dislikeIdString?.Split(',') ?? [];
+
+        if (likeIds.Any(id => id == postIdString)) return "like";
+        if (dislikeIds.Any(id => id == postIdString)) return "dislike";
+        return "none";
+    }
+
     // 4.4.1 Create post
     [HttpPost("create")]
     public async Task<ActionResult> CreatePost([FromBody] PostStructure post)
@@ -69,6 +80,7 @@ public class PostController : ControllerBase
     [HttpGet("view/{post_id}")]
     public async Task<ActionResult> GetPost(int post_id)
     {
+        // using LINQ instead of with methods here, cus doing two joins like that is crazy
         var matchingPost = await (from post in _context.Post
             join author in _context.Users on post.auth_id equals author.UserId
             join community in _context.Community on post.com_id equals community.CommunityID
@@ -93,6 +105,7 @@ public class PostController : ControllerBase
                     author.Username,
                     author.ImagePath,
                     author.IsAdmin,
+                    VoteState = GetVoteState(post_id.ToString(), author.LikeId, author.DislikeId),
                 },
                 community = new
                 {
