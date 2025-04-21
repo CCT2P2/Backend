@@ -13,9 +13,11 @@ public class PostStructure
     public int PostID { get; set; }
 
     [Column("TITLE")]
+    [StringLength(300)]
     public string Title { get; set; } = string.Empty;
 
     [Column("MAIN")]
+    [StringLength(100000)]
     public string MainText { get; set; } = string.Empty;
 
     [Column("AUTHOR_ID")]
