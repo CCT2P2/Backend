@@ -87,10 +87,39 @@ namespace Gnuf.Controllers
             return Ok();
         }
 
-        // 4.3.4 Update community (backend)
+        [HttpPut("/update/backend")]
+        public async Task<ActionResult> UpdateCommunityBackend([FromBody] commQueryParameters query)
+        {
+            var community = await _context.Community.FirstOrDefaultAsync(c => c.CommunityID == query.Id);
 
+            if (community == null)
+            {
+                return NotFound("Community not found.");
+            }
 
-        //todo
+            if (query.MemberCount.HasValue)
+            {
+                community.MemberCount = query.MemberCount.Value;
+            }
+
+            if (!string.IsNullOrEmpty(query.Tags))
+            {
+                community.Tags = query.Tags;
+            }
+
+            if (string.IsNullOrEmpty(query.PostID))
+            {
+                
+                community.PostID = (string.IsNullOrEmpty(community.PostID) 
+                    ? query.PostID 
+                    : community.PostID + "," + query.PostID);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok("Community updated successfully.");
+        }
+
 
 
         // 4.3.5 Delete community
