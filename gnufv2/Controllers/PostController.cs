@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Gnuf.Models;
 using Gnuf.Models.Posts;
 using gnufv2.Extensions;
@@ -80,6 +81,9 @@ public class PostController : ControllerBase
     [HttpGet("view/{post_id}")]
     public async Task<ActionResult> GetPost(int post_id)
     {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var user = await _context.Users.FindAsync(Convert.ToInt32(userId));
+
         // using LINQ instead of with methods here, cus doing two joins like that is crazy
         var matchingPost = await (from post in _context.Post
             join author in _context.Users on post.auth_id equals author.UserId
@@ -99,13 +103,13 @@ public class PostController : ControllerBase
                 comment_count = post.comment_Count,
                 // Return comments as CSV string
                 post.comments,
+                VoteState = GetVoteState(post_id.ToString(), user.LikeId, user.DislikeId),
                 author = new
                 {
                     post.auth_id,
                     author.Username,
                     author.ImagePath,
                     author.IsAdmin,
-                    VoteState = GetVoteState(post_id.ToString(), author.LikeId, author.DislikeId),
                 },
                 community = new
                 {
