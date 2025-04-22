@@ -88,6 +88,7 @@ namespace Gnuf.Controllers
         }
 
         [HttpPut("update/backend")]
+        [Authorize]
         public async Task<ActionResult> UpdateCommunityBackend([FromBody] commQueryParameters query)
         {
             var community = await _context.Community.FirstOrDefaultAsync(c => c.CommunityID == query.Id);
@@ -107,12 +108,12 @@ namespace Gnuf.Controllers
                 community.Tags = query.Tags;
             }
 
-            if (string.IsNullOrEmpty(query.PostID))
+            if (!string.IsNullOrEmpty(query.PostID))
             {
-                
-                community.PostID = (string.IsNullOrEmpty(community.PostID) 
+                Console.WriteLine(query.PostID);
+                community.PostID = string.IsNullOrEmpty(community.PostID) 
                     ? query.PostID 
-                    : community.PostID + "," + query.PostID);
+                    : community.PostID + "," + query.PostID;
             }
 
             await _context.SaveChangesAsync();
@@ -144,6 +145,7 @@ namespace Gnuf.Controllers
 
 
         }
+        
         // 4.3.6 Get all communities
         [HttpGet("all")]
         public async Task<ActionResult<List<GetAllCommunitiesResponse>>> GetAllCommunities()

@@ -2,7 +2,8 @@
 
 public class PostByIdQueryParameters
 {
-    public string? ids { get; set; }
+    public string ids { get; set; }
+    public int limit { get; set; }
 }
 public class GetPostsByIdResponse
 {

@@ -281,9 +281,9 @@ public class PostController : ControllerBase
     }
 
     [HttpGet("posts/by-ids")]
-    public async Task<ActionResult> GetPostsByIds([FromQuery] string ids)
+    public async Task<ActionResult> GetPostsByIds([FromQuery] PostByIdQueryParameters data)
     {
-        ids = HttpUtility.UrlDecode(ids);
+        string ids = HttpUtility.UrlDecode(data.ids);
 
         if (string.IsNullOrWhiteSpace(ids))
             return BadRequest("No post IDs provided.");
@@ -300,6 +300,7 @@ public class PostController : ControllerBase
 
         var postsRaw = await _context.Post
             .Where(p => postIdList.Contains(p.PostID))
+            .Take(data.limit)
             .ToListAsync(); // <-- Fetch raw entities first
 
         var posts = postsRaw
