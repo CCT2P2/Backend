@@ -284,7 +284,7 @@ public class PostController : ControllerBase
     public async Task<ActionResult> GetPostsByIds([FromQuery] string ids)
     {
         ids = HttpUtility.UrlDecode(ids);
-        
+
         if (string.IsNullOrWhiteSpace(ids))
             return BadRequest("No post IDs provided.");
 
@@ -298,8 +298,11 @@ public class PostController : ControllerBase
         if (!postIdList.Any())
             return BadRequest("Invalid post IDs.");
 
-        var posts = await _context.Post
+        var postsRaw = await _context.Post
             .Where(p => postIdList.Contains(p.PostID))
+            .ToListAsync(); // <-- Fetch raw entities first
+
+        var posts = postsRaw
             .Select(p => new
             {
                 post_id = p.PostID,
@@ -307,7 +310,7 @@ public class PostController : ControllerBase
                 main_text = p.MainText,
                 p.auth_id,
                 p.com_id,
-                timestamp = ((DateTimeOffset)p.timestamp).ToUnixTimeSeconds(),
+                timestamp = ((DateTimeOffset)p.timestamp).ToUnixTimeSeconds(), // Now it's safe
                 p.likes,
                 p.dislikes,
                 p.post_id_ref,
@@ -315,8 +318,9 @@ public class PostController : ControllerBase
                 comment_count = p.comment_Count
             })
             .OrderByDescending(post => post.timestamp)
-            .ToListAsync();
+            .ToList();
 
         return Ok(posts);
     }
+
 }
