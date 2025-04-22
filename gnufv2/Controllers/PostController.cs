@@ -282,6 +282,8 @@ public class PostController : ControllerBase
     [HttpGet("posts/by-ids")]
     public async Task<ActionResult> GetPostsByIds([FromQuery] string ids)
     {
+        ids = HttpUtility.UrlDecode(ids);
+        
         if (string.IsNullOrWhiteSpace(ids))
             return BadRequest("No post IDs provided.");
 
