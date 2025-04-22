@@ -87,7 +87,7 @@ namespace Gnuf.Controllers
             return Ok();
         }
 
-        [HttpPut("/update/backend")]
+        [HttpPut("update/backend")]
         public async Task<ActionResult> UpdateCommunityBackend([FromBody] commQueryParameters query)
         {
             var community = await _context.Community.FirstOrDefaultAsync(c => c.CommunityID == query.Id);
