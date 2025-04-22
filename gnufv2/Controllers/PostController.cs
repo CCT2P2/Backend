@@ -86,37 +86,37 @@ public class PostController : ControllerBase
 
         // using LINQ instead of with methods here, cus doing two joins like that is crazy
         var matchingPost = await (from post in _context.Post
-            join author in _context.Users on post.auth_id equals author.UserId
-            join community in _context.Community on post.com_id equals community.CommunityID
-            where post.PostID == post_id
-            select new
-            {
-                id = post.PostID,
-                title = post.Title,
-                main_text = post.MainText,
-                post.timestamp,
-                post.likes,
-                post.dislikes,
-                post.post_id_ref,
-                post.comment_flag,
-                post.Img,
-                comment_count = post.comment_Count,
-                // Return comments as CSV string
-                post.comments,
-                VoteState = GetVoteState(post_id.ToString(), user.LikeId, user.DislikeId),
-                author = new
-                {
-                    post.auth_id,
-                    author.Username,
-                    author.ImagePath,
-                    author.IsAdmin,
-                },
-                community = new
-                {
-                    post.com_id,
-                    community.Name,
-                }
-            }).FirstOrDefaultAsync();
+                                  join author in _context.Users on post.auth_id equals author.UserId
+                                  join community in _context.Community on post.com_id equals community.CommunityID
+                                  where post.PostID == post_id
+                                  select new
+                                  {
+                                      id = post.PostID,
+                                      title = post.Title,
+                                      main_text = post.MainText,
+                                      post.timestamp,
+                                      post.likes,
+                                      post.dislikes,
+                                      post.post_id_ref,
+                                      post.comment_flag,
+                                      post.Img,
+                                      comment_count = post.comment_Count,
+                                      // Return comments as CSV string
+                                      post.comments,
+                                      VoteState = GetVoteState(post_id.ToString(), user.LikeId, user.DislikeId),
+                                      author = new
+                                      {
+                                          post.auth_id,
+                                          author.Username,
+                                          author.ImagePath,
+                                          author.IsAdmin,
+                                      },
+                                      community = new
+                                      {
+                                          post.com_id,
+                                          community.Name,
+                                      }
+                                  }).FirstOrDefaultAsync();
 
         if (matchingPost == null)
         {
@@ -279,7 +279,7 @@ public class PostController : ControllerBase
         });
     }
 
-    [HttpGet("postsids")]
+    [HttpGet("posts/by-ids")]
     public async Task<ActionResult> GetPostsByIds([FromQuery] string ids)
     {
         if (string.IsNullOrWhiteSpace(ids))
