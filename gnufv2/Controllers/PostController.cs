@@ -299,10 +299,9 @@ public class PostController : ControllerBase
             return BadRequest("Invalid post IDs.");
 
         var postsRaw = await _context.Post
-            .Where(p => postIdList.Contains(p.PostID)  && p.comment_flag != true)
+            .Where(p => postIdList.Contains(p.PostID))
             .Take(data.limit)
             .ToListAsync(); // <-- Fetch raw entities first
-
 
         var posts = postsRaw
             .Select(p => new

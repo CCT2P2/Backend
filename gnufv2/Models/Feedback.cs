@@ -21,7 +21,7 @@ public class FeedbackStructure
     [Column("DIDNT")]
     public string Didnt { get; set; } = string.Empty;
 
-    [Column("OTHER")]
+    [Column("FEEDBACK")]
     public string? Feedback { get; set; }
 
     [Required]
