@@ -241,14 +241,11 @@ public class PostController : ControllerBase
         var limit = Math.Clamp(query.Limit, 1, 100);
         var offset = Math.Max(query.Offset, 0);
 
-        var posts = await postsQuery
-            .Join(
-                _context.Users,
-                post => post.auth_id,
-                author => author.UserId,
-                (post, author) => new
+        var matchingPosts = await (from post in postsQuery
+                join author in _context.Users on post.auth_id equals author.UserId
+                join community in _context.Community on post.com_id equals community.CommunityID
+                select new
                 {
-                    // Post properties
                     post_id = post.PostID,
                     title = post.Title,
                     main_text = post.MainText,
@@ -266,17 +263,21 @@ public class PostController : ControllerBase
                         author.ImagePath,
                         author.IsAdmin,
                     },
+                    community = new
+                    {
+                        post.com_id,
+                        community.Name,
+                    }
                 })
             .Skip(offset)
             .Take(limit)
             .ToListAsync();
 
-
         return Ok(new
         {
-            posts,
+            matchingPosts,
             total_count = totalCount,
-            next_offset = offset + posts.Count
+            next_offset = offset + matchingPosts.Count
         });
     }
 
