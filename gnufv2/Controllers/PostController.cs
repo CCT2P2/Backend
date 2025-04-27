@@ -275,7 +275,7 @@ public class PostController : ControllerBase
 
         return Ok(new
         {
-            matchingPosts,
+            posts = matchingPosts,
             total_count = totalCount,
             next_offset = offset + matchingPosts.Count
         });
