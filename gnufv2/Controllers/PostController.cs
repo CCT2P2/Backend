@@ -183,6 +183,9 @@ public class PostController : ControllerBase
     [HttpGet("posts")]
     public async Task<ActionResult> GetPosts([FromQuery] PostQueryParameters query)
     {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var user = await _context.Users.FindAsync(Convert.ToInt32(userId));
+
         DateTime? timestampStart = null;
         DateTime? timestampEnd = null;
 
@@ -256,7 +259,9 @@ public class PostController : ControllerBase
                     post.dislikes,
                     post.post_id_ref,
                     post.comment_flag,
+                    post.Img,
                     comment_count = post.comment_Count,
+                    VoteState = GetVoteState(post.PostID.ToString(), user.LikeId, user.DislikeId),
                     author = new
                     {
                         author.Username,
