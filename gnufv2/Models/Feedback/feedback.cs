@@ -4,7 +4,7 @@ namespace Gnuf.Models.Feedback
     {
         public string Worked { get; set; }
         public string Didnt { get; set; }
-        public string Feedback { get; set; }
+        public string Other { get; set; }
         public int Rating { get; set; }
         public int Timestamp { get; set; }
     }
