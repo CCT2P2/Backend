@@ -36,7 +36,7 @@ namespace Gnuf.Controllers
                 username = user.Username,
                 img_path = user.ImagePath,
                 post_ids = user.PostIds,
-                community_ids = user.CommunityIds,
+                user_ids = user.UserId,
                 tags = user.Tags,
                 admin = user.IsAdmin,
                 display_name = user.DisplayName,
@@ -61,43 +61,42 @@ namespace Gnuf.Controllers
             return Ok();
         }
 
-        // 4.2.3 Update User Profile (user)
-        [HttpPut("update/user/{user_id}")]
-        public async Task<ActionResult> UpdateUserProfile(int user_id, [FromBody] UserStructure update)
+
+        // 4.3.4 Update user (backend)
+        [HttpPut("update/backend")]
+        [Authorize]
+        public async Task<ActionResult> UpdateUserProfileBackend([FromBody] Gnuf.Models.User.UserQueryParameters query)
         {
-            var user = await _context.Users.FindAsync(user_id);
+            var user = await _context.Users.FirstOrDefaultAsync(c => c.UserId == query.Id);
+
             if (user == null)
             {
-                return NotFound();
+                return NotFound("User not found.");
             }
 
-            if (!string.IsNullOrWhiteSpace(update.ImagePath))
-                user.ImagePath = update.ImagePath;
-
-            if (!string.IsNullOrWhiteSpace(update.Password))
-                user.Password = update.Password;
-
-            await _context.SaveChangesAsync();
-            return Ok();
-        }
-
-        // 4.2.4 Update User Profile (backend)
-        [HttpPut("update/backend/{user_id}")]
-        public async Task<ActionResult> UpdateUserBackend(int user_id, [FromBody] UserStructure update)
-        {
-            var user = await _context.Users.FindAsync(user_id);
-            if (user == null)
+            if (!string.IsNullOrEmpty(query.CommunityIDs))
             {
-                return NotFound();
+                if (query.Action == "join")
+                {
+                    // Append community
+                    user.CommunityIds = string.IsNullOrEmpty(user.CommunityIds)
+                        ? query.CommunityIDs
+                        : user.CommunityIds + "," + query.CommunityIDs;
+                }
+                else if (query.Action == "leave")
+                {
+                    // Remove community
+                    var currentIds = user.CommunityIds?.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList() ?? new List<string>();
+                    currentIds.Remove(query.CommunityIDs);
+
+                    user.CommunityIds = string.Join(",", currentIds);
+                }
             }
 
-            user.PostIds = update.PostIds ?? "";
-            user.CommunityIds = update.CommunityIds ?? "";
-            user.Tags = update.Tags ?? "";
-
             await _context.SaveChangesAsync();
-            return Ok();
+            return Ok("User updated successfully.");
         }
+
 
     }
 }
