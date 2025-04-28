@@ -243,8 +243,8 @@ public class PostController : ControllerBase
         postsQuery = query.SortBy.ToLower() switch
         {
             "likes" => query.SortOrder == "asc"
-                ? postsQuery.OrderBy(p => p.likes)
-                : postsQuery.OrderByDescending(p => p.likes),
+                ? postsQuery.OrderBy(p => p.likes - p.dislikes)
+                : postsQuery.OrderByDescending(p => p.likes - p.dislikes),
             "comments" => query.SortOrder == "asc"
                 ? postsQuery.OrderBy(p => p.comment_Count)
                 : postsQuery.OrderByDescending(p => p.comment_Count),
