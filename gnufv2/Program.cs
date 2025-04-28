@@ -46,7 +46,7 @@ var app = builder.Build();
 
 app.Use(async (context, next) =>
 {
-    Console.WriteLine($"[{DateTime.Now}] Request: {context.Request.Method} {context.Request.Path}");
+    Console.WriteLine($"[{DateTime.Now}] Request: {context.Request}");
     await next();
 });
 

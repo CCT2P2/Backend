@@ -22,7 +22,7 @@ public class FeedbackStructure
     public string Didnt { get; set; } = string.Empty;
 
     [Column("OTHER")]
-    public string? Feedback { get; set; }
+    public string? Other { get; set; }
 
     [Required]
     [Column("RATING")]
