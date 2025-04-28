@@ -33,7 +33,6 @@ public class FeedbackController : ControllerBase
         {
             feedback.Timestamp = (int)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         }
-
         _context.Feedback.Add(feedback);
         await _context.SaveChangesAsync();
 

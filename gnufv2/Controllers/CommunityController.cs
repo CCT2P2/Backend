@@ -87,6 +87,7 @@ namespace Gnuf.Controllers
             return Ok();
         }
 
+        // 4.3.4 Update community (backend)
         [HttpPut("update/backend")]
         [Authorize]
         public async Task<ActionResult> UpdateCommunityBackend([FromBody] commQueryParameters query)
@@ -111,8 +112,8 @@ namespace Gnuf.Controllers
             if (!string.IsNullOrEmpty(query.PostID))
             {
                 Console.WriteLine(query.PostID);
-                community.PostID = string.IsNullOrEmpty(community.PostID) 
-                    ? query.PostID 
+                community.PostID = string.IsNullOrEmpty(community.PostID)
+                    ? query.PostID
                     : community.PostID + "," + query.PostID;
             }
 
@@ -145,7 +146,7 @@ namespace Gnuf.Controllers
 
 
         }
-        
+
         // 4.3.6 Get all communities
         [HttpGet("all")]
         public async Task<ActionResult<List<GetAllCommunitiesResponse>>> GetAllCommunities()
