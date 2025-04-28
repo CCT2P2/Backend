@@ -54,8 +54,21 @@ public class PostController : ControllerBase
             comments = "" // Ensure initialized as an empty CSV string
         };
 
+        // get the author, see if they exists
+        var author = await _context.Users.FirstOrDefaultAsync(u => u.UserId == post.auth_id);
+        if (author == null)
+        {
+            return NotFound();
+        }
+
+        // add post to database
         _context.Post.Add(newPost);
         await _context.SaveChangesAsync();
+
+        // add post id to user
+        author.PostIds += string.IsNullOrWhiteSpace(author.PostIds)
+            ? $"{newPost.PostID}"
+            : $",{newPost.PostID}";
 
         // this is only for comments
         if (newPost.comment_flag)
