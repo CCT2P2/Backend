@@ -183,6 +183,9 @@ public class PostController : ControllerBase
     [HttpGet("posts")]
     public async Task<ActionResult> GetPosts([FromQuery] PostQueryParameters query)
     {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var user = await _context.Users.FindAsync(Convert.ToInt32(userId));
+
         DateTime? timestampStart = null;
         DateTime? timestampEnd = null;
 
@@ -241,14 +244,11 @@ public class PostController : ControllerBase
         var limit = Math.Clamp(query.Limit, 1, 100);
         var offset = Math.Max(query.Offset, 0);
 
-        var posts = await postsQuery
-            .Join(
-                _context.Users,
-                post => post.auth_id,
-                author => author.UserId,
-                (post, author) => new
+        var matchingPosts = await (from post in postsQuery
+                join author in _context.Users on post.auth_id equals author.UserId
+                join community in _context.Community on post.com_id equals community.CommunityID
+                select new
                 {
-                    // Post properties
                     post_id = post.PostID,
                     title = post.Title,
                     main_text = post.MainText,
@@ -259,24 +259,30 @@ public class PostController : ControllerBase
                     post.dislikes,
                     post.post_id_ref,
                     post.comment_flag,
+                    post.Img,
                     comment_count = post.comment_Count,
+                    VoteState = GetVoteState(post.PostID.ToString(), user.LikeId, user.DislikeId),
                     author = new
                     {
                         author.Username,
                         author.ImagePath,
                         author.IsAdmin,
                     },
+                    community = new
+                    {
+                        post.com_id,
+                        community.Name,
+                    }
                 })
             .Skip(offset)
             .Take(limit)
             .ToListAsync();
 
-
         return Ok(new
         {
-            posts,
+            posts = matchingPosts,
             total_count = totalCount,
-            next_offset = offset + posts.Count
+            next_offset = offset + matchingPosts.Count
         });
     }
 
@@ -299,7 +305,7 @@ public class PostController : ControllerBase
             return BadRequest("Invalid post IDs.");
 
         var postsRaw = await _context.Post
-            .Where(p => postIdList.Contains(p.PostID))
+            .Where(p => postIdList.Contains(p.PostID)  && p.comment_flag != true)
             .Take(data.limit)
             .ToListAsync(); // <-- Fetch raw entities first
 

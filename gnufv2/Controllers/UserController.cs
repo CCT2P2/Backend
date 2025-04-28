@@ -92,27 +92,7 @@ namespace Gnuf.Controllers
             }
 
             user.PostIds = update.PostIds ?? "";
-
-            if (update.CommunityIds != null)
-            {
-                var currentCommunities = user.CommunityIds.Split(',').Where(s => !string.IsNullOrEmpty(s)).ToList();
-                var updateCommunities = update.CommunityIds.Split(',').Where(s => !string.IsNullOrEmpty(s)).ToList();
-
-                foreach (var communityId in updateCommunities)
-                {
-                    if (currentCommunities.Contains(communityId))
-                    {
-                        currentCommunities.Remove(communityId);
-                    }
-                    else
-                    {
-                        currentCommunities.Add(communityId);
-                    }
-                }
-
-                user.CommunityIds = string.Join(",", currentCommunities);
-            }
-
+            user.CommunityIds = update.CommunityIds ?? "";
             user.Tags = update.Tags ?? "";
 
             await _context.SaveChangesAsync();
