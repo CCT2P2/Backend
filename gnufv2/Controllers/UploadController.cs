@@ -13,7 +13,7 @@ namespace Gnuf.Controllers
 
         public UploadController(IWebHostEnvironment webHostEnvironment)
         {
-            _imageUploadFolderPath = Path.Combine(webHostEnvironment.ContentRootPath, "images");
+            _imageUploadFolderPath = Path.Combine(webHostEnvironment.ContentRootPath, "uploads");
 
             if (!Directory.Exists(_imageUploadFolderPath))
             {
@@ -29,7 +29,7 @@ namespace Gnuf.Controllers
             return allowedExtensions.Contains(extension);
         }
 
-        [HttpPost("upload")]
+        [HttpPost("image")]
         public async Task<IActionResult> UploadImage(IFormFile file)
         {
             if (file == null || file.Length == 0)
@@ -53,8 +53,7 @@ namespace Gnuf.Controllers
 
             return Ok(new
             {
-                imageUrl = $"{Request.Scheme}://{Request.Host}/images/{uuid}"
-            });
+                imageUrl = $"{Request.Scheme}://{Request.Host}/images/{fileName}"});
         }
     }
 }

@@ -51,7 +51,8 @@ public class PostController : ControllerBase
             likes = 0,
             dislikes = 0,
             comment_Count = 0,
-            comments = "" // Ensure initialized as an empty CSV string
+            comments = "", // Ensure initialized as an empty CSV string
+            Img = post.Img
         };
 
         // get the author, see if they exists
