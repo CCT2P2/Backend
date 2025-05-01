@@ -28,6 +28,8 @@
 
   <ItemGroup>
     <Folder Include="Controllers\test\" />
+    <Folder Include="uploads\" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 </Project>

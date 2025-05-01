@@ -51,11 +51,25 @@ public class PostController : ControllerBase
             likes = 0,
             dislikes = 0,
             comment_Count = 0,
-            comments = "" // Ensure initialized as an empty CSV string
+            comments = "", // Ensure initialized as an empty CSV string
+            Img = post.Img
         };
 
+        // get the author, see if they exists
+        var author = await _context.Users.FirstOrDefaultAsync(u => u.UserId == post.auth_id);
+        if (author == null)
+        {
+            return NotFound();
+        }
+
+        // add post to database
         _context.Post.Add(newPost);
         await _context.SaveChangesAsync();
+
+        // add post id to user
+        author.PostIds += string.IsNullOrWhiteSpace(author.PostIds)
+            ? $"{newPost.PostID}"
+            : $",{newPost.PostID}";
 
         // this is only for comments
         if (newPost.comment_flag)
@@ -230,8 +244,8 @@ public class PostController : ControllerBase
         postsQuery = query.SortBy.ToLower() switch
         {
             "likes" => query.SortOrder == "asc"
-                ? postsQuery.OrderBy(p => p.likes)
-                : postsQuery.OrderByDescending(p => p.likes),
+                ? postsQuery.OrderBy(p => p.likes - p.dislikes)
+                : postsQuery.OrderByDescending(p => p.likes - p.dislikes),
             "comments" => query.SortOrder == "asc"
                 ? postsQuery.OrderBy(p => p.comment_Count)
                 : postsQuery.OrderByDescending(p => p.comment_Count),
