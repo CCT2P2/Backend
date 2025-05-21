@@ -1,5 +1,6 @@
-## Temporary unarchival as of 07/0/2025 due to several CVEs. rearchival will hapen after release 1.2
-### ARCHIVED AS OF 01/05/2025 @ 14:00
+## ARCHIVED AS OF 12/05/2025 @ 11:48
+### Temporary unarchival as of 07/05/2025 due to several CVEs. rearchival will hapen after release 1.2
+
 
 Database + Backend for the GNUF project
 

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Gnuf.Models;
+using gnufv2.Extensions;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Gnuf.Controllers
@@ -23,6 +24,10 @@ namespace Gnuf.Controllers
         public async Task<ActionResult> VoteOnPost(int post_id, [FromBody] Gnuf.Models.Interactions.VoteRequest vote)
         {
             var user_id = vote.UserID;
+            
+            if (!User.MatchesId(user_id.ToString()) && !User.IsInRole("Admin")) return Unauthorized();
+
+            
             var voteType = vote.VoteType.ToLower();
 
             var interaction = await _context.Users.FirstOrDefaultAsync(x => x.UserId == user_id);
