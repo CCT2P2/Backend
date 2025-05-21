@@ -27,7 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
     <Folder Include="Controllers\test\" />
     <Content Include="database/GNUF.sqlite" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="uploads\**\*.*" CopyToPublishDirectory="PreserveNewest" />
