@@ -34,7 +34,6 @@ builder.Services.AddAuthentication(options =>
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
-            // this part isnt in the docs linked, its basically just verifies the signature of the token so the server knows its authentic
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ??
                                        throw new InvalidOperationException("JWT Key is not configured 2")))
@@ -50,7 +49,7 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
-app.UseHttpsRedirection(); // to serve images on wwwroot
+app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseStaticFiles();

@@ -65,7 +65,7 @@ namespace Gnuf.Controllers
         }
 
         // 4.3.3 Update community (user)
-        [HttpPut("update/details/{community_id}")] //now there's no fecking errors, but also no fecking update, so 🤷
+        [HttpPut("update/details/{community_id}")] 
         public async Task<ActionResult> UpdateCommunityUser(int community_id, [FromBody] CommunityStructure update)
         {
             // Only admins can update communities

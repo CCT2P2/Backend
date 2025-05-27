@@ -98,8 +98,7 @@ public class PostController : ControllerBase
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var user = await _context.Users.FindAsync(Convert.ToInt32(userId));
-
-        // using LINQ instead of with methods here, cus doing two joins like that is crazy
+        
         var matchingPost = await (from post in _context.Post
                                   join author in _context.Users on post.auth_id equals author.UserId
                                   join community in _context.Community on post.com_id equals community.CommunityID
@@ -331,7 +330,7 @@ public class PostController : ControllerBase
                 main_text = p.MainText,
                 p.auth_id,
                 p.com_id,
-                timestamp = ((DateTimeOffset)p.timestamp).ToUnixTimeSeconds(), // Now it's safe
+                timestamp = ((DateTimeOffset)p.timestamp).ToUnixTimeSeconds(),
                 p.likes,
                 p.dislikes,
                 p.post_id_ref,

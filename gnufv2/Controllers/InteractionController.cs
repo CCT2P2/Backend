@@ -94,7 +94,7 @@ namespace Gnuf.Controllers
             }
             else
             {
-                return BadRequest("Invalid vote type."); //not sure how the rest handles this, but not my problem
+                return BadRequest("Invalid vote type."); 
             }
 
             post.likes = Math.Max(0, post.likes);
